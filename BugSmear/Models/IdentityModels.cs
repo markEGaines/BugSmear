@@ -34,5 +34,15 @@ namespace BugSmear.Models
 
 
         public DbSet<Ticket> Tickets { get; set; }
+
+        public System.Data.Entity.DbSet<BugSmear.Models.Project> Projects { get; set; }
+
+        public System.Data.Entity.DbSet<BugSmear.Models.TicketPriority> TicketPriorities { get; set; }
+
+        public System.Data.Entity.DbSet<BugSmear.Models.TicketStatus> TicketStatus { get; set; }
+
+        public System.Data.Entity.DbSet<BugSmear.Models.TicketType> TicketTypes { get; set; }
+
+
     }
 }

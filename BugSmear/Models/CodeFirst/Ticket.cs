@@ -9,7 +9,7 @@ namespace BugSmear.Models
 {
     public class Ticket
     {
-        public Ticket()                  //constructor
+        public Ticket()                 
         {
             this.TicketAttachments = new HashSet<TicketAttachment>();
             this.TicketComments = new HashSet<TicketComment>();
