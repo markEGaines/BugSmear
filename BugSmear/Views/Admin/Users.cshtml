@@ -6,10 +6,6 @@
 
 <h2>Users</h2>
 
-@*<p>
-    @Html.ActionLink("Create New", "Create")
-</p>*@
-
 <table class="table">
     <tr>
         <th>@Html.DisplayNameFor(model => model.Email)     </th>
@@ -17,16 +13,20 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>@Html.DisplayFor(modelItem => item.Email)        </td>
-        <td>@Html.DisplayFor(modelItem => item.UserName)     </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
-
+    @foreach (var u in Model) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => u.Email)        </td>
+            <td>@Html.DisplayFor(modelItem => u.UserName)     </td>
+            <td>
+                @if (this.User.IsInRole("Administrator"))
+                {
+                    @Html.ActionLink("Edit", "EditUser", new { id=u.Id }) 
+                }
+                else
+                {
+                    @Html.ActionLink("View Details", "EditUser", new { id = u.Id })
+                }
+            </td>
+        </tr>
+    }
 </table>

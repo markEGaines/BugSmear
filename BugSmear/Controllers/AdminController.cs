@@ -36,6 +36,8 @@ namespace BugSmear.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
         public ActionResult EditUser(AdminUserViewModel model)
         {
             var user = db.Users.Find(model.User.Id);
@@ -48,7 +50,7 @@ namespace BugSmear.Controllers
                 else
                     um.RemoveFromRole(user.Id, role.Name);
             }
-            return RedirectToAction("EditUser", new { Id = model.User.Id });
+            return RedirectToAction("Users", new { Id = model.User.Id });
         }     
     }
 }

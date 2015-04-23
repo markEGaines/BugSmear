@@ -54,6 +54,10 @@ namespace BugSmear.Migrations
 
             var userId = userManager.FindByEmail("markegaines@gmail.com").Id;
             userManager.AddToRole(userId, "Administrator");
+            userManager.AddToRole(userId, "Developer");
+            userManager.AddToRole(userId, "Project Manager");
+            userManager.AddToRole(userId, "Submitter");
+
 // add Administrators
             if (!context.Users.Any(r => r.Email == "lreaves@coderfoundry.com"))
             {
@@ -78,6 +82,7 @@ namespace BugSmear.Migrations
 
             userId = userManager.FindByEmail("bdavis@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Administrator");
+            userManager.AddToRole(userId, "Project Manager");
 //------------------------
             if (!context.Users.Any(r => r.Email == "ajensen@coderfoundry.com"))
             {

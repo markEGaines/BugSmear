@@ -3,8 +3,21 @@
     ViewBag.Title = "Home Page";
 }
 
-
+@if (!this.User.Identity.IsAuthenticated) {
 <div>
 <h2>BugSmear</h2>
-The term BUG was coined by Captain Grace Hopper.  SMEAR is an acronym for a Simple Method Ensures Appropriate Resolutions.    
+The term BUG (in this context) is commonly attributed to Captain Grace Hopper circa 1947.  
+SMEAR is a new acronym for a "Simple Method Ensures Appropriate Resolutions".    
 </div>
+<div>
+    <br /><br /><br /><br /><br />
+    Please @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to Proceed.
+</div>
+
+} else { 
+<div>
+    <h2>DASHBOARD GOES HERE</h2>
+
+    @Html.ActionLink("List Users", "Users","Admin")
+
+</div>}

@@ -1,0 +1,28 @@
+﻿@model BugSmear.Models.AdminUserViewModel
+
+@{
+    ViewBag.Title = "EditUser";
+}
+
+<h2>EditUser</h2>
+
+<h2>@Model.User.UserName </h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ListBox("SelectedRoles",Model.Roles,Model.SelectedRoles)
+    @Html.HiddenFor(model => model.User.Id)
+
+    <div>
+    @if (this.User.IsInRole("Administrator"))
+    {
+        <input type="submit" value="Save" class="btn btn-default" />
+        <a href="javascript:void(0);" onclick="history.go(-1);">Cancel</a>
+    }
+    else
+    {
+        <a href="javascript:void(0);" onclick="history.go(-1);">Back</a>
+    }
+    </div>
+}
