@@ -50,25 +50,31 @@ namespace BugSmear.Models
     public class TicketStatus
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Status { get; set; }
     }
 
     public class TicketPriority
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Priority { get; set; }
     }
     
     public class TicketType
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Type { get; set; }
     }
 
     public class Project
     {
+        public Project()                 
+        {
+            this.ApplicationUsers = new HashSet<ApplicationUser>();
+        }
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string ProjectName { get; set; }
+
+        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
 
     }
 

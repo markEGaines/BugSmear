@@ -14,6 +14,7 @@ namespace BugSmear.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Admin
+        [HttpGet]
         public ActionResult Users()
         {
             return View(db.Users.ToList());
@@ -51,6 +52,6 @@ namespace BugSmear.Controllers
                     um.RemoveFromRole(user.Id, role.Name);
             }
             return RedirectToAction("Users", new { Id = model.User.Id });
-        }     
+        }
     }
 }

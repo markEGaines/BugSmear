@@ -21,23 +21,96 @@ namespace BugSmear.Migrations
                 new RoleStore<IdentityRole>(context));
             
             if(!context.Roles.Any(r=>r.Name == "Administrator"))
-            {
                 roleManager.Create(new IdentityRole { Name = "Administrator"});
-            }
-
+            
             if (!context.Roles.Any(r => r.Name == "Project Manager"))
-            {
                 roleManager.Create(new IdentityRole { Name = "Project Manager" });
-            }
             
             if (!context.Roles.Any(r => r.Name == "Developer"))
-            {
                 roleManager.Create(new IdentityRole { Name = "Developer" });
-            }
             
             if (!context.Roles.Any(r => r.Name == "Submitter"))
-            {
                 roleManager.Create(new IdentityRole { Name = "Submitter" });
+
+
+            if (!context.TicketStatus.Any(ts => ts.Status == "Open"))
+            {
+                var status = new TicketStatus
+                {
+                    Status = "Open"
+                };
+                context.TicketStatus.Add(status);
+                context.SaveChanges();
+            }
+
+            if (!context.TicketStatus.Any(ts => ts.Status == "Closed"))
+            {
+                var status = new TicketStatus
+                {
+                    Status = "Closed"
+                };
+                context.TicketStatus.Add(status);
+                context.SaveChanges();
+            }
+
+            if (!context.TicketPriorities.Any(ts => ts.Priority == "Critical"))
+            {
+                var status = new TicketPriority
+                {
+                    Priority = "Critical"
+                };
+                context.TicketPriorities.Add(status);
+                context.SaveChanges();
+            }
+
+            if (!context.TicketPriorities.Any(ts => ts.Priority == "Moderate"))
+            {
+                var status = new TicketPriority
+                {
+                    Priority = "Moderate"
+                };
+                context.TicketPriorities.Add(status);
+                context.SaveChanges();
+            }
+
+            if (!context.TicketPriorities.Any(ts => ts.Priority == "Low"))
+            {
+                var status = new TicketPriority
+                {
+                    Priority = "Low"
+                };
+                context.TicketPriorities.Add(status);
+                context.SaveChanges();
+            }
+
+            if (!context.TicketTypes.Any(tt => tt.Type == "Defect - User Interface"))
+            {
+                var status = new TicketType
+                {
+                    Type = "Defect - User Interface"
+                };
+                context.TicketTypes.Add(status);
+                context.SaveChanges();
+            }
+            
+            if (!context.TicketTypes.Any(tt => tt.Type == "Defect - Business Logic"))
+            {
+                var status = new TicketType
+                {
+                    Type = "Defect - Business Logic"
+                };
+                context.TicketTypes.Add(status);
+                context.SaveChanges();
+            }
+
+            if (!context.TicketTypes.Any(tt => tt.Type == "Enhancement"))
+            {
+                var status = new TicketType
+                {
+                    Type = "Enhancement"
+                };
+                context.TicketTypes.Add(status);
+                context.SaveChanges();
             }
 
             var userManager = new UserManager<ApplicationUser>(
@@ -49,6 +122,7 @@ namespace BugSmear.Migrations
                 { 
                     UserName = "markegaines@gmail.com",
                     Email="markegaines@gmail.com",
+                    EmailConfirmed=true,
                 }, "Plugh4!");               
             }
 
@@ -65,6 +139,7 @@ namespace BugSmear.Migrations
                 {
                     UserName = "lreaves@coderfoundry.com",
                     Email = "lreaves@coderfoundry.com",
+                    EmailConfirmed = true,
                 }, "Password-1");
             }
 
@@ -77,6 +152,7 @@ namespace BugSmear.Migrations
                 {
                     UserName = "bdavis@coderfoundry.com",
                     Email = "bdavis@coderfoundry.com",
+                    EmailConfirmed = true,
                 }, "Password-1");
             }
 
@@ -90,6 +166,7 @@ namespace BugSmear.Migrations
                 {
                     UserName = "ajensen@coderfoundry.com",
                     Email = "ajensen@coderfoundry.com",
+                    EmailConfirmed = true,
                 }, "Password-1");
             }
 
@@ -102,6 +179,7 @@ namespace BugSmear.Migrations
                 {
                     UserName = "tjones@coderfoundry.com",
                     Email = "tjones@coderfoundry.com",
+                    EmailConfirmed = true,
                 }, "Password-1");
             }
 
@@ -114,6 +192,7 @@ namespace BugSmear.Migrations
                 {
                     UserName = "tparrish@coderfoundry.com",
                     Email = "tparrish@coderfoundry.com",
+                    EmailConfirmed = true,
                 }, "Password-1");
             }
 

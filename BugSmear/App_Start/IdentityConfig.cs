@@ -11,15 +11,45 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using BugSmear.Models;
+using SendGrid;
+using System.Net.Mail;
+using System.Net;
+using System.Configuration;
 
 namespace BugSmear
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            var username = ConfigurationManager.AppSettings["SendgridUsername"];
+            var password = ConfigurationManager.AppSettings["SendgridPassword"];
+            var from = ConfigurationManager.AppSettings["ContactEmail"];
+
+            // Create the email object first, then add the properties.
+            SendGridMessage myMessage = new SendGridMessage();
+            myMessage.AddTo(message.Destination);
+            myMessage.From = new MailAddress(from);
+            myMessage.Subject = message.Subject;
+            myMessage.Text = message.Body;
+            myMessage.Html = message.Body;
+
+
+            // Create credentials, specifying your user name and password.
+            var credentials = new NetworkCredential(username, password);
+
+            // Create an Web transport for sending email.
+            var transportWeb = new Web(credentials);
+
+            // Send the email.
+            try
+            {
+                await transportWeb.DeliverAsync(myMessage);
+            }
+            catch(Exception e)
+            {
+                var whoops = "oops";
+            }
         }
     }
 
