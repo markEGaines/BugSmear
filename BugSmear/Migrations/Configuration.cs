@@ -53,7 +53,7 @@ namespace BugSmear.Migrations
                 context.SaveChanges();
             }
 
-            if (!context.TicketPriorities.Any(ts => ts.Priority == "Critical"))
+            if (!context.TicketPriorities.Any(tp => tp.Priority == "Critical"))
             {
                 var status = new TicketPriority
                 {
@@ -63,7 +63,7 @@ namespace BugSmear.Migrations
                 context.SaveChanges();
             }
 
-            if (!context.TicketPriorities.Any(ts => ts.Priority == "Moderate"))
+            if (!context.TicketPriorities.Any(tp => tp.Priority == "Moderate"))
             {
                 var status = new TicketPriority
                 {
@@ -73,7 +73,7 @@ namespace BugSmear.Migrations
                 context.SaveChanges();
             }
 
-            if (!context.TicketPriorities.Any(ts => ts.Priority == "Low"))
+            if (!context.TicketPriorities.Any(tp => tp.Priority == "Low"))
             {
                 var status = new TicketPriority
                 {

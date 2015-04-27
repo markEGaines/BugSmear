@@ -1,0 +1,29 @@
+﻿@model BugSmear.Models.ProjectUsersViewModel
+
+@{
+    ViewBag.Title = "Asssign Users";
+}
+
+<h2>Asssign Users</h2>
+
+<h2>@Model.projectName </h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ListBox("SelectedUsers", Model.Users, Model.SelectedUsers)
+    @Html.HiddenFor(model => model.projectId)
+
+    <div>
+        @if (this.User.IsInRole("Administrator"))
+        {
+            <input type="submit" value="Save" class="btn btn-default" />
+            <a href="javascript:void(0);" onclick="history.go(-1);">Cancel</a>
+        }
+        else
+        {
+            <a href="javascript:void(0);" onclick="history.go(-1);">Back</a>
+        }
+    </div>
+}
+

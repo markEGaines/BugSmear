@@ -42,7 +42,7 @@ namespace BugSmear.Controllers
         {
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "ProjectName");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Priority");
-            ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Status");
+            //ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Status");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Type");
             return View();
         }
@@ -52,10 +52,13 @@ namespace BugSmear.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,AssignedToUserId,EstHours,DueDate")] Ticket ticket)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Title,Description,Created,ProjectId,TicketTypeId,TicketStatusId,TicketPriorityId,OwnerUserId,EstHours,DueDate")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+                ticket.Created = System.DateTimeOffset.Now;
+                ticket.TicketStatusId = db.TicketStatus.FirstOrDefault(ts => ts.Status == "Open").Id;
+                ticket.OwnerUserId = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
                 db.Tickets.Add(ticket);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -63,7 +66,7 @@ namespace BugSmear.Controllers
 
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "ProjectName", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Priority", ticket.TicketPriorityId);
-            ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Status", ticket.TicketStatusId);
+            //ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Status", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Type", ticket.TicketTypeId);
             return View(ticket);
         }

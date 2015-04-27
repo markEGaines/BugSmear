@@ -6,7 +6,6 @@
 
 <h2>Edit</h2>
 
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -25,16 +24,33 @@
             </div>
         </div>
 
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
+<!---------------------------------------------------------------------------->
+
+
+        <a href="/ProjectUsers/AssignUsers/@Model.Id">Assign Users</a> |
+        <a href="/ProjectUsers/RemoveUsers/@Model.Id">Remove Users</a> 
+    
+
+
+
+   <h4>Users assigned to this Project </h4>
+   
+   @foreach (var u in Model.ApplicationUsers)
+   {
+         @Html.DisplayFor(modelItem => u.Email) <br />
+   }
+        <br />
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Project List", "Index")
 </div>
 
 @section Scripts {

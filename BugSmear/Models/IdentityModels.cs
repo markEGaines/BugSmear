@@ -13,10 +13,13 @@ namespace BugSmear.Models
         public ApplicationUser()
         {
             this.Projects = new HashSet<Project>();
+            this.TicketsOwned = new HashSet<Ticket>();
+            this.TicketsAssigned = new HashSet<Ticket>();
         }
 
         public virtual ICollection<Project> Projects { get; set; }
-
+        public virtual ICollection<Ticket> TicketsOwned { get; set; }
+        public virtual ICollection<Ticket> TicketsAssigned { get; set; }
 
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

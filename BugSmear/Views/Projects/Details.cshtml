@@ -22,5 +22,15 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    <a href="/ProjectUsers/AssignUsers/@Model.Id">Assign Users</a> |
+    <a href="/ProjectUsers/RemoveUsers/@Model.Id">Remove Users</a> |
     @Html.ActionLink("Back to List", "Index")
 </p>
+<h4>Users assigned to this Project </h4>
+
+@foreach (var u in Model.ApplicationUsers)
+{
+    @Html.DisplayFor(modelItem => u.Email) <br />
+    
+}
+<br />
