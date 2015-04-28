@@ -36,10 +36,10 @@
             @Html.DisplayNameFor(model => model.Updated)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.OwnerUserId)
+            @Html.DisplayNameFor(model => model.OwnerUser)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AssignedToUserId)
+            @Html.DisplayNameFor(model => model.AssignedToUser)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.EstHours)
@@ -71,22 +71,26 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Created)
+            @*@Html.DisplayFor(modelItem => item.Created.date)*@
+            @if (item.Created != null) 
+            { @item.Created.Date.ToShortDateString()}
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Updated)
+            @if (item.Updated != null)
+            { @item.Updated.Value.Date.ToShortDateString()}
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.OwnerUserId)
+            @Html.DisplayFor(modelItem => item.OwnerUser.UserName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.AssignedToUserId)
+            @Html.DisplayFor(modelItem => item.AssignedToUser.UserName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.EstHours)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.DueDate)
+            @if (item.DueDate != null)
+            { @item.DueDate.Value.Date.ToShortDateString()}
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

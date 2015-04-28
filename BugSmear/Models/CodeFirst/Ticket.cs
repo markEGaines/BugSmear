@@ -27,6 +27,7 @@ namespace BugSmear.Models
         public int TicketTypeId { get; set; }
         public int TicketPriorityId { get; set; }
         public int TicketStatusId { get; set; }
+        [Required]
         public string OwnerUserId { get; set; }
         public string AssignedToUserId { get; set; }
 

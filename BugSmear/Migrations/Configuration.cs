@@ -43,11 +43,11 @@ namespace BugSmear.Migrations
                 context.SaveChanges();
             }
 
-            if (!context.TicketStatus.Any(ts => ts.Status == "Closed"))
+            if (!context.TicketStatus.Any(ts => ts.Status == "Resolved"))
             {
                 var status = new TicketStatus
                 {
-                    Status = "Closed"
+                    Status = "Resolved"
                 };
                 context.TicketStatus.Add(status);
                 context.SaveChanges();

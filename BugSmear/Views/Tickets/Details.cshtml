@@ -63,7 +63,9 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Created)
+            @*@Html.DisplayFor(model => model.Created)*@
+            @if(Model.Created != null)
+            { @Model.Created.Date.ToShortDateString()}
         </dd>
 
         <dt>
@@ -71,23 +73,25 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Updated)
+            @*@Html.DisplayFor(model => model.Updated)*@
+            @if(Model.Updated != null)
+            { @Model.Updated.Value.Date.ToShortDateString()}
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.OwnerUserId)
+            @Html.DisplayNameFor(model => model.OwnerUser)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.OwnerUserId)
+            @Html.DisplayFor(model => model.OwnerUser.UserName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.AssignedToUserId)
+            @Html.DisplayNameFor(model => model.AssignedToUser)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.AssignedToUserId)
+            @Html.DisplayFor(model => model.AssignedToUser.UserName)
         </dd>
 
         <dt>
@@ -103,7 +107,9 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.DueDate)
+            @*@Html.DisplayFor(model => model.DueDate)*@
+            @if(Model.DueDate != null)
+            { @Model.DueDate.Value.Date.ToShortDateString()}
         </dd>
 
     </dl>

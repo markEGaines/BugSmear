@@ -44,6 +44,7 @@ namespace BugSmear.Controllers
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Priority");
             //ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Status");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Type");
+            //ViewBag.AssignedToUserId = new SelectList(db.Users.Where( u => u.Roles.Any(ur=>ur.RoleId==u.Id)), "Id", "Type");
             return View();
         }
 
@@ -87,6 +88,8 @@ namespace BugSmear.Controllers
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Priority", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Status", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Type", ticket.TicketTypeId);
+            ViewBag.AssignedToUserId = new SelectList(db.Users.Where(u => u.Roles.Any(ur => ur.RoleId == db.Roles.FirstOrDefault(r => r.Name == "Developer").Id)), "Id", "UserName", ticket.AssignedToUserId);
+            ViewBag.OwnerUserId = new SelectList(db.Users.Where(u => u.Roles.Any(ur => ur.RoleId == db.Roles.FirstOrDefault(r => r.Name == "Submitter").Id)), "Id", "UserName", ticket.OwnerUserId);
             return View(ticket);
         }
 
@@ -99,6 +102,7 @@ namespace BugSmear.Controllers
         {
             if (ModelState.IsValid)
             {
+                ticket.Updated = System.DateTimeOffset.Now;
                 db.Entry(ticket).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
