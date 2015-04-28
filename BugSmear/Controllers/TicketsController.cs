@@ -44,7 +44,6 @@ namespace BugSmear.Controllers
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Priority");
             //ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Status");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Type");
-            //ViewBag.AssignedToUserId = new SelectList(db.Users.Where( u => u.Roles.Any(ur=>ur.RoleId==u.Id)), "Id", "Type");
             return View();
         }
 
