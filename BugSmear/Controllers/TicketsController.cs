@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BugSmear.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugSmear.Controllers
 {
@@ -18,8 +19,62 @@ namespace BugSmear.Controllers
         // GET: Tickets
         public async Task<ActionResult> Index()
         {
-            var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+         //   var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+         //   var tickets = db.Tickets.Include(t => t.Project);
+
+            //ticket.OwnerUserId = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
+
+
+
+            if (User.IsInRole("Administrator"))
+            {
+                ViewBag.asRole = "Administrator";
+                var tickets = from t in db.Tickets
+                              select t;
+
+                return View(await tickets.ToListAsync());
+            }
+            else if (User.IsInRole("Project Manager"))
+            {
+                ViewBag.asRole = "Project Manager";
+                var userId = User.Identity.GetUserId();
+                var tickets = from u in db.Users
+                              where u.Id == userId
+                              from p in u.Projects
+                              from t in p.Tickets
+                              select t;
+
+                return View(await tickets.ToListAsync());
+            }
+            else if (User.IsInRole("Developer"))
+            {
+                ViewBag.asRole = "Developer";
+            //var tickets = from t in db.Tickets
+            //              where (t.AssignedToUser.UserName == User.Identity.Name)
+            //                  select t;
+                var userId = User.Identity.GetUserId();
+                var tickets = from u in db.Users
+                              where u.Id == userId
+                              from p in u.Projects
+                              from t in p.Tickets
+                              select t;
+
             return View(await tickets.ToListAsync());
+            }
+            else if (User.IsInRole("Submitter"))
+            {
+                ViewBag.asRole = "Submitter";
+                var tickets = from t in db.Tickets
+                              where (t.OwnerUser.UserName == User.Identity.Name)
+                              select t;
+
+                return View(await tickets.ToListAsync());
+            }
+
+            return View();
+
+         //   return View(await tickets.ToListAsync());
+
         }
 
         // GET: Tickets/Details/5
