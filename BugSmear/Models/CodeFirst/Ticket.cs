@@ -87,7 +87,7 @@ namespace BugSmear.Models
         public string FilePath { get; set; }
         public string Description { get; set; }
         public DateTimeOffset Created { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public string FileUrl { get; set; }
 
         public virtual Ticket Ticket { get; set; }
@@ -100,7 +100,7 @@ namespace BugSmear.Models
         public string Comment { get; set; }
         public DateTimeOffset Created { get; set; }
         public int TicketId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public bool Hide { get; set; }                  // scope creep
         public float Hours { get; set; }                // scope creep
@@ -118,7 +118,7 @@ namespace BugSmear.Models
         public string oldValue { set; get; }
         public string newValue { set; get; }
         public DateTimeOffset Changed { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public virtual ApplicationUser User { get; set; }
         public virtual Ticket Ticket { get; set; }
@@ -127,7 +127,7 @@ namespace BugSmear.Models
     {
         public int Id { get; set; }
         public int TicketId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public virtual ApplicationUser User { get; set; }
         public virtual Ticket Ticket { get; set; }

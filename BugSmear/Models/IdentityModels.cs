@@ -54,6 +54,10 @@ namespace BugSmear.Models
 
         public System.Data.Entity.DbSet<BugSmear.Models.TicketType> TicketTypes { get; set; }
 
+        public System.Data.Entity.DbSet<BugSmear.Models.TicketComment> TicketComments { get; set; }
+        
+        public System.Data.Entity.DbSet<BugSmear.Models.TicketAttachment> TicketAttachments { get; set; }
+
 
     }
 }

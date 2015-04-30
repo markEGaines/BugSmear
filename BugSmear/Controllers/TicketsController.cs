@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using BugSmear.Models;
 using Microsoft.AspNet.Identity;
+using System.IO;
 
 namespace BugSmear.Controllers
 {
@@ -89,6 +90,10 @@ namespace BugSmear.Controllers
             {
                 return HttpNotFound();
             }
+            // sort comments in descending order
+            ticket.TicketComments = ticket.TicketComments.OrderByDescending(p => p.Created).ToList();
+
+
             return View(ticket);
         }
 
@@ -97,7 +102,6 @@ namespace BugSmear.Controllers
         {
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "ProjectName");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Priority");
-            //ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Status");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Type");
             return View();
         }
@@ -107,13 +111,33 @@ namespace BugSmear.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Title,Description,Created,ProjectId,TicketTypeId,TicketStatusId,TicketPriorityId,OwnerUserId,EstHours,DueDate")] Ticket ticket)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Title,Description,Created,ProjectId,TicketTypeId,TicketStatusId,TicketPriorityId,OwnerUserId,EstHours,DueDate")] Ticket ticket, HttpPostedFileBase image)
         {
+
+            if (image != null && image.ContentLength > 0)
+            {
+                var ext = Path.GetExtension(image.FileName).ToLower();                    // check file type is image
+                if (ext != ".png" && ext != ".jpg" && ext != ".jpeg")
+                    ModelState.AddModelError("image", "Invalid format.");
+            }
+
             if (ModelState.IsValid)
             {
                 ticket.Created = System.DateTimeOffset.Now;
                 ticket.TicketStatusId = db.TicketStatus.FirstOrDefault(ts => ts.Status == "Open").Id;
                 ticket.OwnerUserId = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
+
+                TicketAttachment ta = new TicketAttachment();
+
+                var filePath = "/Uploads/tickets/images/";
+                var absPath = Server.MapPath("~" + filePath);
+                ta.FileUrl = filePath + image.FileName;
+                image.SaveAs(Path.Combine(absPath, image.FileName));
+                ta.Created = System.DateTimeOffset.Now;
+                ta.UserId = User.Identity.GetUserId();
+
+                db.TicketAttachments.Add(ta);
+
                 db.Tickets.Add(ticket);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -121,7 +145,6 @@ namespace BugSmear.Controllers
 
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "ProjectName", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Priority", ticket.TicketPriorityId);
-            //ViewBag.TicketStatusId = new SelectList(db.TicketStatus, "Id", "Status", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Type", ticket.TicketTypeId);
             return View(ticket);
         }
@@ -202,5 +225,43 @@ namespace BugSmear.Controllers
             }
             base.Dispose(disposing);
         }
+
+        // POST: Tickets/CreateComment
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateComment([Bind(Include = "TicketId,AuthorId,Created,Comment,Hours,PercentComplete")] TicketComment ticketcomment)
+        {
+            if (ModelState.IsValid)
+            {
+                if (String.IsNullOrWhiteSpace(ticketcomment.Comment))
+                {
+                    ModelState.AddModelError("Comment", "Missing Comment Text");
+                    return RedirectToAction("Details", new { id = ticketcomment.TicketId });
+                }
+                ticketcomment.Created = System.DateTimeOffset.Now;
+                ticketcomment.UserId = User.Identity.GetUserId();
+
+                db.TicketComments.Add(ticketcomment);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Details", new { id =  ticketcomment.TicketId });
+
+            }
+            return RedirectToAction("Details", new { id = ticketcomment.TicketId });
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
