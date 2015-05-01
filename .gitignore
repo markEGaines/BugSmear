@@ -231,3 +231,4 @@ $RECYCLE.BIN/
 *.lnk
 BugSmear/Web.config
 BugSmear.Tests/App.config
+*.config
