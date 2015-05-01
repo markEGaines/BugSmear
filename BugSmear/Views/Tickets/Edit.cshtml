@@ -7,7 +7,7 @@
 <h2>Edit</h2>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Tickets", FormMethod.Post, new { enctype = "Multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     
@@ -91,6 +91,17 @@
             </div>
         </div>
         @*--------------------------------------------------------------------------------------------------------------*@
+        <div class="form-group">
+            @Html.LabelFor(model => model.TicketAttachments, "Ticket Attachments", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="form-group">
+                    <input name="image" type="file" id="fileUpload" />
+                </div>
+            </div>
+        </div>
+        @*--------------------------------------------------------------------------------------------------------------*@
+
+
         <div class="form-group">
             @Html.LabelFor(model => model.EstHours, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

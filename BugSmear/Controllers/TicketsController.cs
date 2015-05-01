@@ -128,14 +128,12 @@ namespace BugSmear.Controllers
                 ticket.OwnerUserId = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
 
                 TicketAttachment ta = new TicketAttachment();
-
                 var filePath = "/Uploads/tickets/images/";
                 var absPath = Server.MapPath("~" + filePath);
                 ta.FileUrl = filePath + image.FileName;
                 image.SaveAs(Path.Combine(absPath, image.FileName));
                 ta.Created = System.DateTimeOffset.Now;
                 ta.UserId = User.Identity.GetUserId();
-
                 db.TicketAttachments.Add(ta);
 
                 db.Tickets.Add(ticket);
@@ -175,10 +173,27 @@ namespace BugSmear.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,AssignedToUserId,EstHours,DueDate")] Ticket ticket)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,AssignedToUserId,EstHours,DueDate")] Ticket ticket, HttpPostedFileBase image)
         {
+            if (image != null && image.ContentLength > 0)
+            {
+                var ext = Path.GetExtension(image.FileName).ToLower();                    // check file type is image
+                if (ext != ".png" && ext != ".jpg" && ext != ".jpeg")
+                    ModelState.AddModelError("image", "Invalid format.");
+            }
+
             if (ModelState.IsValid)
             {
+                TicketAttachment ta = new TicketAttachment();
+                var filePath = "/Uploads/tickets/images/";
+                var absPath = Server.MapPath("~" + filePath);
+                ta.FileUrl = filePath + image.FileName;
+                image.SaveAs(Path.Combine(absPath, image.FileName));
+                ta.Created = System.DateTimeOffset.Now;
+                ta.UserId = User.Identity.GetUserId();
+                ta.TicketId = ticket.Id;
+                db.TicketAttachments.Add(ta);
+
                 ticket.Updated = System.DateTimeOffset.Now;
                 db.Entry(ticket).State = EntityState.Modified;
                 await db.SaveChangesAsync();
