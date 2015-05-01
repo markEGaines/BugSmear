@@ -232,3 +232,4 @@ $RECYCLE.BIN/
 BugSmear/Web.config
 BugSmear.Tests/App.config
 *.config
+*.jpg
