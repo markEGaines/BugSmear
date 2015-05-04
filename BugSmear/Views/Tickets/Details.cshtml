@@ -12,102 +12,48 @@
     <div class="row">
         <div class="col-md-6">
             <dl class="dl-horizontal">
-                <dt>
-                    @Html.DisplayNameFor(model => model.Project.ProjectName)
-                </dt>
+                <dt>@Html.DisplayNameFor(model => model.Project.ProjectName)</dt>
+                <dd>@Html.DisplayFor(model => model.Project.ProjectName)</dd>
 
-                <dd>
-                    @Html.DisplayFor(model => model.Project.ProjectName)
-                </dd>
+                <dt>@Html.DisplayNameFor(model => model.TicketPriority.Priority)</dt>
+                <dd>@Html.DisplayFor(model => model.TicketPriority.Priority)</dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.TicketPriority.Priority)
-                </dt>
+                <dt>@Html.DisplayNameFor(model => model.TicketStatus.Status)</dt>
+                <dd>@Html.DisplayFor(model => model.TicketStatus.Status)</dd>
 
-                <dd>
-                    @Html.DisplayFor(model => model.TicketPriority.Priority)
-                </dd>
+                <dt>@Html.DisplayNameFor(model => model.TicketType.Type)</dt>
+                <dd>@Html.DisplayFor(model => model.TicketType.Type)</dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.TicketStatus.Status)
-                </dt>
+                <dt>@Html.DisplayNameFor(model => model.Title)</dt>
+                <dd>@Html.DisplayFor(model => model.Title)</dd>
 
-                <dd>
-                    @Html.DisplayFor(model => model.TicketStatus.Status)
-                </dd>
+                <dt>@Html.DisplayNameFor(model => model.Description)</dt>
+                <dd>@Html.DisplayFor(model => model.Description)</dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.TicketType.Type)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.TicketType.Type)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Title)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Title)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Description)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.Description)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.Created)
-                </dt>
-
+                <dt>@Html.DisplayNameFor(model => model.Created)</dt>
                 <dd>
                     @*@Html.DisplayFor(model => model.Created)*@
                     @if (Model.Created != null)
                     { @Model.Created.Date.ToShortDateString()}
                 </dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.Updated)
-                </dt>
-
+                <dt>@Html.DisplayNameFor(model => model.Updated)</dt>
                 <dd>
                     @*@Html.DisplayFor(model => model.Updated)*@
                     @if (Model.Updated != null)
                     { @Model.Updated.Value.Date.ToShortDateString()}
                 </dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.OwnerUser)
-                </dt>
+                <dt>@Html.DisplayNameFor(model => model.OwnerUser)</dt>
+                <dd>@Html.DisplayFor(model => model.OwnerUser.UserName)</dd>
 
-                <dd>
-                    @Html.DisplayFor(model => model.OwnerUser.UserName)
-                </dd>
+                <dt>@Html.DisplayNameFor(model => model.AssignedToUser)</dt>
+                <dd>@Html.DisplayFor(model => model.AssignedToUser.UserName)</dd>
 
-                <dt>
-                    @Html.DisplayNameFor(model => model.AssignedToUser)
-                </dt>
+                <dt>@Html.DisplayNameFor(model => model.EstHours)</dt>
+                <dd>@Html.DisplayFor(model => model.EstHours)</dd>
 
-                <dd>
-                    @Html.DisplayFor(model => model.AssignedToUser.UserName)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.EstHours)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.EstHours)
-                </dd>
-
-                <dt>
-                    @Html.DisplayNameFor(model => model.DueDate)
-                </dt>
-
+                <dt>@Html.DisplayNameFor(model => model.DueDate)</dt>
                 <dd>
                     @*@Html.DisplayFor(model => model.DueDate)*@
                     @if (Model.DueDate != null)
@@ -165,18 +111,16 @@
             By: @Html.DisplayFor(model => comment.User.UserName) on @Html.DisplayFor(model => comment.Created)
             <p>@Html.Raw(comment.Comment)</p>
         </div>
+        @if (this.User.IsInRole("Administrator") || this.User.IsInRole("Project Manager"))
+        {
         <div class="col-lg-3">
             <p>Actual Hours: @Html.DisplayFor(model => comment.Hours)</p>
             <p>Est Pct Complete: @Html.DisplayFor(model => comment.PercentComplete)</p>
         </div>
-
-        @if (this.User.IsInRole("Administrator") || this.User.IsInRole("Project Manager"))
-        {
-
-            <div class="col-lg-2">
-                <button>@Html.ActionLink("Edit", "EditComment", new { id = comment.Id }) </button>
-                <button>@Html.ActionLink("Delete", "DeleteComment", new { id = comment.Id })</button>
-            </div>
+        <div class="col-lg-2">
+            <button>@Html.ActionLink("Edit", "EditComment", new { id = comment.Id }) </button>
+            <button>@Html.ActionLink("Delete", "DeleteComment", new { id = comment.Id })</button>
+        </div>
         }
     </div>
 }

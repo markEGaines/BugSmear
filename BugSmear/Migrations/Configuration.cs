@@ -198,6 +198,70 @@ namespace BugSmear.Migrations
 
             userId = userManager.FindByEmail("tparrish@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Administrator");
+ 
+            
+            
+            
+ // add test data
+
+            if (!context.Users.Any(r => r.Email == "SamSubmitter@coderfoundry.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "SamSubmitter@coderfoundry.com",
+                    Email = "SamSubmitter@coderfoundry.com",
+                    EmailConfirmed = true,
+                }, "Password-1");
+            }
+
+            userId = userManager.FindByEmail("SamSubmitter@coderfoundry.com").Id;
+            userManager.AddToRole(userId, "Submitter");
+
+//------------------------
+
+            if (!context.Users.Any(r => r.Email == "PamProjectManager@coderfoundry.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "PamProjectManager@coderfoundry.com",
+                    Email = "PamProjectManager@coderfoundry.com",
+                    EmailConfirmed = true,
+                }, "Password-1");
+            }
+
+            userId = userManager.FindByEmail("PamProjectManager@coderfoundry.com").Id;
+            userManager.AddToRole(userId, "Project Manager");
+
+ //------------------------
+
+            if (!context.Users.Any(r => r.Email == "DorothyDeveloper@coderfoundry.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "DorothyDeveloper@coderfoundry.com",
+                    Email = "DorothyDeveloper@coderfoundry.com",
+                    EmailConfirmed = true,
+                }, "Password-1");
+            }
+
+            userId = userManager.FindByEmail("DorothyDeveloper@coderfoundry.com").Id;
+            userManager.AddToRole(userId, "Developer");
+
+ //------------------------
+
+            if (!context.Users.Any(r => r.Email == "ArtieAdministrator@coderfoundry.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "ArtieAdministrator@coderfoundry.com",
+                    Email = "ArtieAdministrator@coderfoundry.com",
+                    EmailConfirmed = true,
+                }, "Password-1");
+            }
+
+            userId = userManager.FindByEmail("ArtieAdministrator@coderfoundry.com").Id;
+            userManager.AddToRole(userId, "Administrator");
+
         }
     }
 }

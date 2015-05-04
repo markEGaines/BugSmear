@@ -126,15 +126,17 @@ namespace BugSmear.Controllers
                 ticket.Created = System.DateTimeOffset.Now;
                 ticket.TicketStatusId = db.TicketStatus.FirstOrDefault(ts => ts.Status == "Open").Id;
                 ticket.OwnerUserId = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
-
-                TicketAttachment ta = new TicketAttachment();
-                var filePath = "/Uploads/tickets/images/";
-                var absPath = Server.MapPath("~" + filePath);
-                ta.FileUrl = filePath + image.FileName;
-                image.SaveAs(Path.Combine(absPath, image.FileName));
-                ta.Created = System.DateTimeOffset.Now;
-                ta.UserId = User.Identity.GetUserId();
-                db.TicketAttachments.Add(ta);
+                if (image != null && image.ContentLength > 0)
+                {
+                    TicketAttachment ta = new TicketAttachment();
+                    var filePath = "/Uploads/tickets/images/";
+                    var absPath = Server.MapPath("~" + filePath);
+                    ta.FileUrl = filePath + image.FileName;
+                    image.SaveAs(Path.Combine(absPath, image.FileName));
+                    ta.Created = System.DateTimeOffset.Now;
+                    ta.UserId = User.Identity.GetUserId();
+                    db.TicketAttachments.Add(ta);
+                }
 
                 db.Tickets.Add(ticket);
                 await db.SaveChangesAsync();
@@ -173,7 +175,7 @@ namespace BugSmear.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,AssignedToUserId,EstHours,DueDate")] Ticket ticket, HttpPostedFileBase image)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,AssignedToUserId,EstHours,DueDate,TicketAttachment")] Ticket ticket, HttpPostedFileBase image)
         {
             if (image != null && image.ContentLength > 0)
             {
@@ -184,16 +186,18 @@ namespace BugSmear.Controllers
 
             if (ModelState.IsValid)
             {
-                TicketAttachment ta = new TicketAttachment();
-                var filePath = "/Uploads/tickets/images/";
-                var absPath = Server.MapPath("~" + filePath);
-                ta.FileUrl = filePath + image.FileName;
-                image.SaveAs(Path.Combine(absPath, image.FileName));
-                ta.Created = System.DateTimeOffset.Now;
-                ta.UserId = User.Identity.GetUserId();
-                ta.TicketId = ticket.Id;
-                db.TicketAttachments.Add(ta);
-
+                if (image != null && image.ContentLength > 0)
+                {
+                    TicketAttachment ta = new TicketAttachment();
+                    var filePath = "/Uploads/tickets/images/";
+                    var absPath = Server.MapPath("~" + filePath);
+                    ta.FileUrl = filePath + image.FileName;
+                    image.SaveAs(Path.Combine(absPath, image.FileName));
+                    ta.Created = System.DateTimeOffset.Now;
+                    ta.UserId = User.Identity.GetUserId();
+                    ta.TicketId = ticket.Id;
+                    db.TicketAttachments.Add(ta);
+                }
                 ticket.Updated = System.DateTimeOffset.Now;
                 db.Entry(ticket).State = EntityState.Modified;
                 await db.SaveChangesAsync();
@@ -207,47 +211,48 @@ namespace BugSmear.Controllers
         }
 
         // GET: Tickets/Delete/5
-        public async Task<ActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Ticket ticket = await db.Tickets.FindAsync(id);
-            if (ticket == null)
-            {
-                return HttpNotFound();
-            }
-            return View(ticket);
-        }
+        //public async Task<ActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Ticket ticket = await db.Tickets.FindAsync(id);
+        //    if (ticket == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(ticket);
+        //}
 
         // POST: Tickets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
-        {
-            Ticket ticket = await db.Tickets.FindAsync(id);
-            db.Tickets.Remove(ticket);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> DeleteConfirmed(int id)
+        //{
+        //    Ticket ticket = await db.Tickets.FindAsync(id);
+        //    db.Tickets.Remove(ticket);
+        //    await db.SaveChangesAsync();
+        //    return RedirectToAction("Index");
+        //}
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
 
         // POST: Tickets/CreateComment
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateComment([Bind(Include = "TicketId,AuthorId,Created,Comment,Hours,PercentComplete")] TicketComment ticketcomment)
+        public async Task<ActionResult> CreateComment([Bind(Include = "TicketId,AuthorId,Created,Comment")] TicketComment ticketcomment)
         {
+        
             if (ModelState.IsValid)
             {
                 if (String.IsNullOrWhiteSpace(ticketcomment.Comment))
@@ -255,6 +260,9 @@ namespace BugSmear.Controllers
                     ModelState.AddModelError("Comment", "Missing Comment Text");
                     return RedirectToAction("Details", new { id = ticketcomment.TicketId });
                 }
+
+
+
                 ticketcomment.Created = System.DateTimeOffset.Now;
                 ticketcomment.UserId = User.Identity.GetUserId();
 
@@ -266,9 +274,74 @@ namespace BugSmear.Controllers
             return RedirectToAction("Details", new { id = ticketcomment.TicketId });
         }
 
+        // GET: Posts/DeleteComment
+        //[Authorize(Roles = "Administrator, Project Manager")]
+        public async Task<ActionResult> DeleteComment(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            TicketComment comment = await db.TicketComments.FindAsync(id);
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+            return View(comment);
+        }
+
+        // POST: Posts/DeleteComment
+        [HttpPost, ActionName("DeleteComment")]
+        [ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admin, Moderator")]
+        public async Task<ActionResult> DeleteCommentConfirmed(int id)
+        {
+            TicketComment ticketcomment = await db.TicketComments.FindAsync(id);
+            Ticket post = db.Tickets.Find(ticketcomment.TicketId);
+            db.TicketComments.Remove(ticketcomment);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = ticketcomment.TicketId });
+        }
+
+        // GET: Posts/EditComment
+        //[Authorize(Roles = "Admin, Moderator")]
+        public async Task<ActionResult> EditComment(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            TicketComment comment = await db.TicketComments.FindAsync(id);
+            if (comment == null)
+            {
+                return HttpNotFound();
+            }
+            return View(comment);
+        }
 
 
+        // POST: Posts/EditComment
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Admin, Moderator")]
+        //public async Task<ActionResult> Edit([Bind(Include = "Id,Created,Updated,Title,Body,MediaUrl,Slug")] Post post)
+        public async Task<ActionResult> EditComment([Bind(Include = "Created,Id,UserId,Comment,TicketId,Hours,PercentComplete")] TicketComment ticketcomment)
+        {
+            if (ModelState.IsValid)
+            {
+                db.TicketComments.Attach(ticketcomment);
+                db.Entry(ticketcomment).State = EntityState.Modified;
 
+                Ticket ticket = db.Tickets.Find(ticketcomment.TicketId);
+
+                await db.SaveChangesAsync();
+                return RedirectToAction("Details", new { id = ticketcomment.TicketId });
+                //return View();
+            }
+            return View(ticketcomment);
+        }
 
 
 
