@@ -11,64 +11,69 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 
-    <table id="tickettable">
-        <thead>
+    <table id="tickettable" class="display" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Project.ProjectName)</th>
+            <th>@Html.DisplayNameFor(model => model.TicketPriority.Priority)</th>
+            <th>@Html.DisplayNameFor(model => model.TicketStatus.Status)</th>
+            <th>@Html.DisplayNameFor(model => model.TicketType.Type)</th>
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.Description)</th>
+            <th>@Html.DisplayNameFor(model => model.Created)</th>
+            <th>@Html.DisplayNameFor(model => model.Updated)</th>
+            <th>@Html.DisplayNameFor(model => model.OwnerUser)</th>
+            <th>@Html.DisplayNameFor(model => model.AssignedToUser)</th>
+            <th>@Html.DisplayNameFor(model => model.EstHours)</th>
+            <th>@Html.DisplayNameFor(model => model.DueDate)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>@Html.DisplayNameFor(model => model.Project.ProjectName)</th>
-                <th>@Html.DisplayNameFor(model => model.TicketPriority.Priority)</th>
-                <th>@Html.DisplayNameFor(model => model.TicketStatus.Status)</th>
-                <th>@Html.DisplayNameFor(model => model.TicketType.Type)</th>
-                <th>@Html.DisplayNameFor(model => model.Title)</th>
-                <th>@Html.DisplayNameFor(model => model.Description)</th>
-                <th>@Html.DisplayNameFor(model => model.Created)</th>
-                <th>@Html.DisplayNameFor(model => model.Updated)</th>
-                <th>@Html.DisplayNameFor(model => model.OwnerUser)</th>
-                <th>@Html.DisplayNameFor(model => model.AssignedToUser)</th>
-                <th>@Html.DisplayNameFor(model => model.EstHours)</th>
-                <th>@Html.DisplayNameFor(model => model.DueDate)</th>
-                <th></th>
+                <td>@Html.DisplayFor(modelItem => item.Project.ProjectName)</td>
+                <td>@Html.DisplayFor(modelItem => item.TicketPriority.Priority)</td>
+                <td>@Html.DisplayFor(modelItem => item.TicketStatus.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.TicketType.Type)</td>
+                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                <td>
+                    @if (item.Created != null)
+                    { @item.Created.Date.ToShortDateString()}
+                </td>
+                <td>
+                    @if (item.Updated != null)
+                    { @item.Updated.Value.Date.ToShortDateString()}
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.OwnerUser.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.AssignedToUser.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.EstHours)</td>
+                <td>
+                    @if (item.DueDate != null)
+                    { @item.DueDate.Value.Date.ToShortDateString()}
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Project.ProjectName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.TicketPriority.Priority)</td>
-                    <td>@Html.DisplayFor(modelItem => item.TicketStatus.Status)</td>
-                    <td>@Html.DisplayFor(modelItem => item.TicketType.Type)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                    <td>
-                        @if (item.Created != null)
-                        { @item.Created.Date.ToShortDateString()}
-                    </td>
-                    <td>
-                        @if (item.Updated != null)
-                        { @item.Updated.Value.Date.ToShortDateString()}
-                    </td>
-                    <td>@Html.DisplayFor(modelItem => item.OwnerUser.UserName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.AssignedToUser.UserName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.EstHours)</td>
-                    <td>
-                        @if (item.DueDate != null)
-                        { @item.DueDate.Value.Date.ToShortDateString()}
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Id }) 
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
+
+
+
 
 
 @section scripts {
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
 <script>
     $(document).ready(function () {
-        $('#tickettable').DataTable();
+        $('#tickettable').DataTable({
+            "order": [[2, "asc"], [1, "asc"]]
+        });
     });
 </script>
     }

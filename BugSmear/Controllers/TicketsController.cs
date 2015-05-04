@@ -31,6 +31,7 @@ namespace BugSmear.Controllers
             {
                 ViewBag.asRole = "Administrator";
                 var tickets = from t in db.Tickets
+                              orderby t.TicketStatus.Status, t.TicketPriority.Priority, t.DueDate.Value
                               select t;
 
                 return View(await tickets.ToListAsync());
