@@ -11,7 +11,7 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 
-    <table id="tickettable" class="display compact" cellspacing="0" width="100">
+<table id="tickettable" class="display compact" cellspacing="0" width="100">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.Project.ProjectName)</th>
@@ -68,18 +68,18 @@
 
 
 @section scripts {
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#tickettable').DataTable({
-            "order": [[2, "asc"], [1, "asc"]]
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#tickettable').DataTable({
+                "order": [[2, "asc"], [1, "asc"]]
+            });
         });
-    });
-</script>
-    }
+    </script>
+}
 
 
 
 @*$('#example').dataTable( {
-  "ajax": "data.json"
-} );*@
+      "ajax": "data.json"
+    } );*@

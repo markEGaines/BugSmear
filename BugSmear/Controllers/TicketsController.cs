@@ -20,10 +20,6 @@ namespace BugSmear.Controllers
         // GET: Tickets
         public async Task<ActionResult> Index()
         {
-            //   var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            //   var tickets = db.Tickets.Include(t => t.Project);
-
-            //ticket.OwnerUserId = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
 
 
 
@@ -73,7 +69,7 @@ namespace BugSmear.Controllers
                 return View(await tickets.ToListAsync());
             }
 
-            return View();
+            return View("Error");
 
             //   return View(await tickets.ToListAsync());
 
@@ -221,6 +217,13 @@ namespace BugSmear.Controllers
                     };
                     db.TicketHistorys.Add(assignedHistory);
                     // notify user here
+                    var user = db.Users.Find(User.Identity.GetUserId());
+                    await new EmailService().SendAsync(new IdentityMessage
+                    {
+                        Subject = "You have been assigned a new ticket",
+                        Destination = user.Email,
+                        Body = "You have been assigned a new ticket... you should run",
+                    });
                 }
                 if (oldTicket.Description != ticket.Description)
                 {
@@ -371,6 +374,7 @@ namespace BugSmear.Controllers
                 ticketcomment.UserId = User.Identity.GetUserId();
 
                 db.TicketComments.Add(ticketcomment);
+
                 await db.SaveChangesAsync();
                 return RedirectToAction("Details", new { id = ticketcomment.TicketId });
 

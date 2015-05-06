@@ -19,16 +19,16 @@ namespace BugSmear.Migrations
         {
             var roleManager = new RoleManager<IdentityRole>(
                 new RoleStore<IdentityRole>(context));
-            
-            if(!context.Roles.Any(r=>r.Name == "Administrator"))
-                roleManager.Create(new IdentityRole { Name = "Administrator"});
-            
+
+            if (!context.Roles.Any(r => r.Name == "Administrator"))
+                roleManager.Create(new IdentityRole { Name = "Administrator" });
+
             if (!context.Roles.Any(r => r.Name == "Project Manager"))
                 roleManager.Create(new IdentityRole { Name = "Project Manager" });
-            
+
             if (!context.Roles.Any(r => r.Name == "Developer"))
                 roleManager.Create(new IdentityRole { Name = "Developer" });
-            
+
             if (!context.Roles.Any(r => r.Name == "Submitter"))
                 roleManager.Create(new IdentityRole { Name = "Submitter" });
 
@@ -92,7 +92,7 @@ namespace BugSmear.Migrations
                 context.TicketTypes.Add(status);
                 context.SaveChanges();
             }
-            
+
             if (!context.TicketTypes.Any(tt => tt.Type == "Defect - Business Logic"))
             {
                 var status = new TicketType
@@ -116,14 +116,14 @@ namespace BugSmear.Migrations
             var userManager = new UserManager<ApplicationUser>(
                 new UserStore<ApplicationUser>(context));
 
-            if(!context.Users.Any(r=>r.Email == "markegaines@gmail.com"))
+            if (!context.Users.Any(r => r.Email == "markegaines@gmail.com"))
             {
                 userManager.Create(new ApplicationUser
-                { 
+                {
                     UserName = "markegaines@gmail.com",
-                    Email="markegaines@gmail.com",
-                    EmailConfirmed=true,
-                }, "Plugh4!");               
+                    Email = "markegaines@gmail.com",
+                    EmailConfirmed = true,
+                }, "Plugh4!");
             }
 
             var userId = userManager.FindByEmail("markegaines@gmail.com").Id;
@@ -132,7 +132,33 @@ namespace BugSmear.Migrations
             userManager.AddToRole(userId, "Project Manager");
             userManager.AddToRole(userId, "Submitter");
 
-// add Administrators
+            // add Administrators
+            if (!context.Users.Any(r => r.Email == "donaldfgaines@gmail.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "donaldfgaines@gmail.com",
+                    Email = "donaldfgaines@gmail.com",
+                    EmailConfirmed = true,
+                }, "Password-1");
+            }
+
+            userId = userManager.FindByEmail("donaldfgaines@gmail.com").Id;
+            userManager.AddToRole(userId, "Administrator");
+            //------------------------
+            if (!context.Users.Any(r => r.Email == "Guest@coderfoundry.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "Guest@coderfoundry.com",
+                    Email = "Guest@coderfoundry.com",
+                    EmailConfirmed = true,
+                }, "Password-1");
+            }
+
+            userId = userManager.FindByEmail("Guest@coderfoundry.com").Id;
+            userManager.AddToRole(userId, "Administrator");
+            //------------------------
             if (!context.Users.Any(r => r.Email == "lreaves@coderfoundry.com"))
             {
                 userManager.Create(new ApplicationUser
@@ -143,9 +169,9 @@ namespace BugSmear.Migrations
                 }, "Password-1");
             }
 
-                userId = userManager.FindByEmail("lreaves@coderfoundry.com").Id;
+            userId = userManager.FindByEmail("lreaves@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Administrator");
-//------------------------
+            //------------------------
             if (!context.Users.Any(r => r.Email == "bdavis@coderfoundry.com"))
             {
                 userManager.Create(new ApplicationUser
@@ -159,7 +185,7 @@ namespace BugSmear.Migrations
             userId = userManager.FindByEmail("bdavis@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Administrator");
             userManager.AddToRole(userId, "Project Manager");
-//------------------------
+            //------------------------
             if (!context.Users.Any(r => r.Email == "ajensen@coderfoundry.com"))
             {
                 userManager.Create(new ApplicationUser
@@ -172,7 +198,7 @@ namespace BugSmear.Migrations
 
             userId = userManager.FindByEmail("ajensen@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Administrator");
-//------------------------
+            //------------------------
             if (!context.Users.Any(r => r.Email == "tjones@coderfoundry.com"))
             {
                 userManager.Create(new ApplicationUser
@@ -185,7 +211,7 @@ namespace BugSmear.Migrations
 
             userId = userManager.FindByEmail("tjones@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Administrator");
-//------------------------
+            //------------------------
             if (!context.Users.Any(r => r.Email == "tparrish@coderfoundry.com"))
             {
                 userManager.Create(new ApplicationUser
@@ -198,11 +224,11 @@ namespace BugSmear.Migrations
 
             userId = userManager.FindByEmail("tparrish@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Administrator");
- 
-            
-            
-            
- // add test data
+
+
+
+
+            // add test data
 
             if (!context.Users.Any(r => r.Email == "SamSubmitter@coderfoundry.com"))
             {
@@ -217,7 +243,7 @@ namespace BugSmear.Migrations
             userId = userManager.FindByEmail("SamSubmitter@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Submitter");
 
-//------------------------
+            //------------------------
 
             if (!context.Users.Any(r => r.Email == "PamProjectManager@coderfoundry.com"))
             {
@@ -232,7 +258,7 @@ namespace BugSmear.Migrations
             userId = userManager.FindByEmail("PamProjectManager@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Project Manager");
 
- //------------------------
+            //------------------------
 
             if (!context.Users.Any(r => r.Email == "DorothyDeveloper@coderfoundry.com"))
             {
@@ -247,7 +273,7 @@ namespace BugSmear.Migrations
             userId = userManager.FindByEmail("DorothyDeveloper@coderfoundry.com").Id;
             userManager.AddToRole(userId, "Developer");
 
- //------------------------
+            //------------------------
 
             if (!context.Users.Any(r => r.Email == "ArtieAdministrator@coderfoundry.com"))
             {

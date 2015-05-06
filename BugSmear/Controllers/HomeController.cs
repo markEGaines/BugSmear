@@ -10,7 +10,14 @@ namespace BugSmear.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return (RedirectToAction("Index", "Tickets"));
+            }
+            else
+            {
+                return (RedirectToAction("Login", "Account"));
+            }
         }
 
         public ActionResult About()
