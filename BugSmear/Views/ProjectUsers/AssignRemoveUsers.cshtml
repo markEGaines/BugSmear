@@ -1,0 +1,171 @@
+﻿@model BugSmear.Models.ProjectUsersViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AssignRemoveUsers</title>
+    <!-- Bootstrap core CSS -->
+    <link href="~/js/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/js/jquery.gritter/css/jquery.gritter.css" />
+
+    <link rel="stylesheet" href="fonts/font-awesome-4/css/font-awesome.min.css">
+
+
+    <link rel="stylesheet" type="text/css" href="~/js/jquery.nanoscroller/nanoscroller.css" />
+    @*<link rel="stylesheet" type="text/css" href="~/js/jquery.easypiechart/jquery.easy-pie-chart.css" />*@
+    <link rel="stylesheet" type="text/css" href="~/js/bootstrap.switch/bootstrap-switch.css" />
+    <link rel="stylesheet" type="text/css" href="~/js/bootstrap.datetimepicker/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/js/jquery.select2/select2.css" />
+    @*<link rel="stylesheet" type="text/css" href="~/js/bootstrap.slider/css/slider.css" />*@
+    <link rel="stylesheet" type="text/css" href="~/js/bootstrap.multiselect/css/bootstrap-multiselect.css" />
+    <link rel="stylesheet" type="text/css" href="~/js/jquery.multiselect/css/multi-select.css" />
+    <link href="css/style.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div id="cl-wrapper">
+        <div class="block-flat">
+            <div class="header">
+                <h3>Boxed Multiselect</h3>
+            </div>
+            <div class="content">
+                <table class="dashed">
+
+                    <tr>
+                        <td>
+                            <select id='optgroup1' multiple='multiple'>
+                                <optgroup label='PM'>
+                                    <option value='1'>Yoda</option>
+                                    <option value='2' selected>Obiwan</option>
+                                </optgroup>
+                                <optgroup label='Dev'>
+                                    <option value='3'>Palpatine</option>
+                                    <option value='4' disabled>Darth Vader</option>
+                                </optgroup>
+                            </select>
+                        </td>
+                        <td>Option groups are detected automatically and for each option group an header element is added</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { @id="optgroup2", multiple="multiple"})
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ListBoxFor(m => m.Users, new MultiSelectList(Model.Users, Model.SelectedUsers), htmlAttributes: new { @id = "optgroup3", multiple = "multiple" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { @class = "selectpicker" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/jquery.js"></script>
+    <script type="text/javascript" src="~/js/jquery.nanoscroller/jquery.nanoscroller.js"></script>
+    @*<script type="text/javascript" src="~/js/jquery.sparkline/jquery.sparkline.min.js"></script>
+    <script type="text/javascript" src="~/js/jquery.easypiechart/jquery.easy-pie-chart.js"></script>*@
+    <script src="~/js/jquery.ui/jquery-ui.js" type="text/javascript"></script>
+    <script type="text/javascript" src="~/js/jquery.nestable/jquery.nestable.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap.switch/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/js/jquery.select2/select2.min.js" type="text/javascript"></script>
+    <script src="~/js/bootstrap.slider/js/bootstrap-slider.js" type="text/javascript"></script>
+    @*<script type="text/javascript" src="~/js/jquery.gritter/js/jquery.gritter.js"></script>*@
+    @*<script type="text/javascript" src="~/js/bootstrap.multiselect/js/bootstrap-multiselect.js"></script>*@
+    <script type="text/javascript" src="~/js/jquery.multiselect/js/jquery.multi-select.js"></script>
+    @*<script type="text/javascript" src="~/js/jquery.quicksearch/jquery.quicksearch.js"></script>*@
+    <script type="text/javascript" src="~/js/behaviour/general.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //initialize the javascript
+            App.init();
+
+
+            //multi-select boxed
+            $('#my-select').multiSelect()
+            $('#pre-selected-options').multiSelect();
+            $('#callbacks').multiSelect({
+                afterSelect: function (values) {
+                    alert("Select value: " + values);
+                },
+                afterDeselect: function (values) {
+                    alert("Deselect value: " + values);
+                }
+            });
+            $('#optgroup').multiSelect({ selectableOptgroup: true });
+            $('#optgroup1').multiSelect({ selectableOptgroup: true });
+            $('#optgroup2').multiSelect({ selectableOptgroup: true });
+            $('#optgroup3').multiSelect({ selectableOptgroup: true });
+            $('#optgroup4').multiSelect({ selectableOptgroup: true });
+
+
+            $('#disabled-attribute').multiSelect();
+            $('#custom-headers').multiSelect({
+                selectableHeader: "<div class='custom-header'>Selectable items</div>",
+                selectionHeader: "<div class='custom-header'>Selection items</div>",
+            });
+            $('#searchable').multiSelect({
+                selectableHeader: "<input type='text' class='form-control search-input' autocomplete='off' placeholder='Search'>",
+                selectionHeader: "<input type='text' class='form-control search-input' autocomplete='off' placeholder='Search'>",
+                afterInit: function (ms) {
+                    var that = this,
+                        $selectableSearch = that.$selectableUl.prev(),
+                        $selectionSearch = that.$selectionUl.prev(),
+                        selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                        selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                    that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which === 40) {
+                            that.$selectableUl.focus();
+                            return false;
+                        }
+                    });
+
+                    that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which == 40) {
+                            that.$selectionUl.focus();
+                            return false;
+                        }
+                    });
+                },
+                afterSelect: function () {
+                    this.qs1.cache();
+                    this.qs2.cache();
+                },
+                afterDeselect: function () {
+                    this.qs1.cache();
+                    this.qs2.cache();
+                }
+            });
+
+
+        });
+    </script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    @*<script src="~/js/behaviour/voice-commands.js"></script>*@
+    <script src="~/js/bootstrap/dist/js/bootstrap.min.js"></script>
+    @*<script type="text/javascript" src="~/js/jquery.flot/jquery.flot.js"></script>
+    <script type="text/javascript" src="~/js/jquery.flot/jquery.flot.pie.js"></script>
+    <script type="text/javascript" src="~/js/jquery.flot/jquery.flot.resize.js"></script>
+    <script type="text/javascript" src="~/js/jquery.flot/jquery.flot.labels.js"></script>*@
+
+</body>
+
+</html>

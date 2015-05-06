@@ -13,6 +13,27 @@ namespace BugSmear.Controllers
         private UserProjectsHelper helper = new UserProjectsHelper();
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        public ActionResult AssignRemoveUsersTEST()
+        {
+
+            var model = new ProjectUsersViewModel();
+            var project = db.Projects.Find(1);
+            model.projectId = project.Id;
+            model.projectName = project.ProjectName;
+            model.Users = new MultiSelectList(helper.ListUsersNotOnProject(1).OrderBy(u => u.UserName), "Id", "UserName");
+            return View(model);
+        }
+
+        public ActionResult AssignRemoveUsers()
+        {
+
+            var model = new ProjectUsersViewModel();
+            var project = db.Projects.Find(1);
+            model.projectId = project.Id;
+            model.projectName = project.ProjectName;
+            model.Users = new MultiSelectList(helper.ListUsersNotOnProject(1).OrderBy(u => u.UserName), "Id", "UserName");
+            return View(model);
+        }
 
         // GET: AssignUsers
         public ActionResult AssignUsers(int Id)
@@ -21,14 +42,14 @@ namespace BugSmear.Controllers
             var project = db.Projects.Find(Id);
             model.projectId = project.Id;
             model.projectName = project.ProjectName;
-            model.Users = new MultiSelectList(helper.ListUsersNotOnProject(Id).OrderBy(u=>u.UserName), "Id", "UserName");
+            model.Users = new MultiSelectList(helper.ListUsersNotOnProject(Id).OrderBy(u => u.UserName), "Id", "UserName");
             return View(model);
         }
 
         // POST: AssignUsers
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles="Administrator")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult AssignUsers(ProjectUsersViewModel model)
         {
             if (ModelState.IsValid)
@@ -39,7 +60,7 @@ namespace BugSmear.Controllers
                     {
                         helper.AddUserToProject(id, model.projectId);
                     }
-                    return RedirectToAction("Details", "Projects", new {id = model.projectId});
+                    return RedirectToAction("Details", "Projects", new { id = model.projectId });
                 }
                 else
                 {

@@ -4,6 +4,9 @@
     ViewBag.Title = "Asssign Users";
 }
 
+<link href="~/Content/bootstrap-multiselect.css" rel="stylesheet" />
+<link href="~/Content/prettify.css" rel="stylesheet" />
+
 <h2>Asssign Users</h2>
 
 <h2>@Model.projectName </h2>
@@ -11,7 +14,20 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+
     @Html.ListBox("SelectedUsers", Model.Users, Model.SelectedUsers)
+    @*@Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { @class = "selectpicker" })*@
+
+
+
+    @*<select class="selectpicker">
+            <option>Mustard</option>
+            <option>Ketchup</option>
+            <option>Relish</option>
+        </select>*@
+
+
+
     @Html.HiddenFor(model => model.projectId)
 
     <div>
@@ -25,5 +41,12 @@
             <a href="javascript:void(0);" onclick="history.go(-1);">Back</a>
         }
     </div>
+}
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.selectpicker').selectpicker();
+        });
+    </script>
 }
 

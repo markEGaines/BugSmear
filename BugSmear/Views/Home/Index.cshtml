@@ -3,25 +3,20 @@
     ViewBag.Title = "Home Page";
 }
 
-@if (!this.User.Identity.IsAuthenticated) {
-<div>
-<h2>BugSmear</h2>
-The term BUG (in this context) is commonly attributed to Captain Grace Hopper circa 1947.  
-SMEAR is a new acronym for a "Simple Method Ensures Appropriate Resolutions".    
-</div>
-<div>
-    <br /><br /><br /><br /><br />
-    Please @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to Proceed.
-</div>
+@if (!this.User.Identity.IsAuthenticated)
+{
+    <div>
+        <h2>BugSmear</h2>
+        The term BUG (in this context) is commonly attributed to Captain Grace Hopper circa 1947.
+        SMEAR is a new acronym for a "Simple Method Ensures Appropriate Resolutions".
+    </div>
+    <div>
+        <br /><br /><br /><br /><br />
+        Please @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }) to Proceed.
+    </div>
 
-} else { 
-<div>
-    <h2>DASHBOARD GOES HERE</h2>
+}
 
-    <h4>@Html.ActionLink("Users", "Users", "Admin")</h4>
-
-    <h4>@Html.ActionLink("Projects", "Index", "Projects")</h4>
-
-    <h4> @Html.ActionLink("Tickets", "Index", "Tickets")</h4>
-
-</div>}
+    @*<div>
+            <h2>DASHBOARD GOES HERE</h2>
+        </div>*@

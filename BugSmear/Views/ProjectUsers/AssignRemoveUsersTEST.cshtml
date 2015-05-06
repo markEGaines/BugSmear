@@ -1,0 +1,128 @@
+﻿@model BugSmear.Models.ProjectUsersViewModel
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AssignRemoveUsers</title>
+    <!-- Bootstrap core CSS -->
+
+</head>
+<body>
+    <div id="cl-wrapper">
+        <div class="block-flat">
+            <div class="header">
+                <h3>Boxed Multiselect</h3>
+            </div>
+            <div class="content">
+                <table class="dashed">
+
+                    <tr>
+                        <td>
+                            <select id='optgroup1' multiple='multiple'>
+                                <optgroup label='PM'>
+                                    <option value='1'>Yoda</option>
+                                    <option value='2' selected>Obiwan</option>
+                                </optgroup>
+                                <optgroup label='Dev'>
+                                    <option value='3'>Palpatine</option>
+                                    <option value='4' disabled>Darth Vader</option>
+                                </optgroup>
+                            </select>
+                        </td>
+                        <td>Option groups are detected automatically and for each option group an header element is added</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { @id = "optgroup2", multiple = "multiple" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ListBoxFor(m => m.Users, new MultiSelectList(Model.Users, Model.SelectedUsers), htmlAttributes: new { @id = "optgroup3", multiple = "multiple" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { @class = "selectpicker" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //initialize the javascript
+            App.init();
+
+
+            //multi-select boxed
+            $('#my-select').multiSelect()
+            $('#pre-selected-options').multiSelect();
+            $('#callbacks').multiSelect({
+                afterSelect: function (values) {
+                    alert("Select value: " + values);
+                },
+                afterDeselect: function (values) {
+                    alert("Deselect value: " + values);
+                }
+            });
+            $('#optgroup').multiSelect({ selectableOptgroup: true });
+            $('#optgroup1').multiSelect({ selectableOptgroup: true });
+            $('#optgroup2').multiSelect({ selectableOptgroup: true });
+            $('#optgroup3').multiSelect({ selectableOptgroup: true });
+            $('#optgroup4').multiSelect({ selectableOptgroup: true });
+
+
+            $('#disabled-attribute').multiSelect();
+            $('#custom-headers').multiSelect({
+                selectableHeader: "<div class='custom-header'>Selectable items</div>",
+                selectionHeader: "<div class='custom-header'>Selection items</div>",
+            });
+            $('#searchable').multiSelect({
+                selectableHeader: "<input type='text' class='form-control search-input' autocomplete='off' placeholder='Search'>",
+                selectionHeader: "<input type='text' class='form-control search-input' autocomplete='off' placeholder='Search'>",
+                afterInit: function (ms) {
+                    var that = this,
+                        $selectableSearch = that.$selectableUl.prev(),
+                        $selectionSearch = that.$selectionUl.prev(),
+                        selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                        selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                    that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which === 40) {
+                            that.$selectableUl.focus();
+                            return false;
+                        }
+                    });
+
+                    that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which == 40) {
+                            that.$selectionUl.focus();
+                            return false;
+                        }
+                    });
+                },
+                afterSelect: function () {
+                    this.qs1.cache();
+                    this.qs2.cache();
+                },
+                afterDeselect: function () {
+                    this.qs1.cache();
+                    this.qs2.cache();
+                }
+            });
+
+
+        });
+    </script>
+    }
+</body>
+
+</html>

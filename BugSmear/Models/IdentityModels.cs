@@ -58,6 +58,8 @@ namespace BugSmear.Models
         
         public System.Data.Entity.DbSet<BugSmear.Models.TicketAttachment> TicketAttachments { get; set; }
 
+        public System.Data.Entity.DbSet<BugSmear.Models.TicketHistory> TicketHistorys { get; set; }
+
 
     }
 }

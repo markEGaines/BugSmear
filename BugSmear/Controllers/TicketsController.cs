@@ -20,8 +20,8 @@ namespace BugSmear.Controllers
         // GET: Tickets
         public async Task<ActionResult> Index()
         {
-         //   var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-         //   var tickets = db.Tickets.Include(t => t.Project);
+            //   var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+            //   var tickets = db.Tickets.Include(t => t.Project);
 
             //ticket.OwnerUserId = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name).Id;
 
@@ -51,9 +51,9 @@ namespace BugSmear.Controllers
             else if (User.IsInRole("Developer"))
             {
                 ViewBag.asRole = "Developer";
-            //var tickets = from t in db.Tickets
-            //              where (t.AssignedToUser.UserName == User.Identity.Name)
-            //                  select t;
+                //var tickets = from t in db.Tickets
+                //              where (t.AssignedToUser.UserName == User.Identity.Name)
+                //                  select t;
                 var userId = User.Identity.GetUserId();
                 var tickets = from u in db.Users
                               where u.Id == userId
@@ -61,7 +61,7 @@ namespace BugSmear.Controllers
                               from t in p.Tickets
                               select t;
 
-            return View(await tickets.ToListAsync());
+                return View(await tickets.ToListAsync());
             }
             else if (User.IsInRole("Submitter"))
             {
@@ -75,7 +75,7 @@ namespace BugSmear.Controllers
 
             return View();
 
-         //   return View(await tickets.ToListAsync());
+            //   return View(await tickets.ToListAsync());
 
         }
 
@@ -199,8 +199,111 @@ namespace BugSmear.Controllers
                     ta.TicketId = ticket.Id;
                     db.TicketAttachments.Add(ta);
                 }
-                ticket.Updated = System.DateTimeOffset.Now;
+                var transactionUpdateTimeStamp = System.DateTimeOffset.Now;
+                ticket.Updated = transactionUpdateTimeStamp;
                 db.Entry(ticket).State = EntityState.Modified;
+
+                //build TicketHistory
+                var oldTicket = (from t in db.Tickets.AsNoTracking()
+                                 where t.Id == ticket.Id
+                                 select t).FirstOrDefault();
+
+                if (oldTicket.AssignedToUserId != ticket.AssignedToUserId)
+                {
+                    var assignedHistory = new TicketHistory
+                    {
+                        TicketId = ticket.Id,
+                        UserId = User.Identity.GetUserId(),
+                        Property = "AssignedUserId",
+                        oldValue = oldTicket.AssignedToUserId,
+                        newValue = ticket.AssignedToUserId,
+                        Changed = transactionUpdateTimeStamp
+                    };
+                    db.TicketHistorys.Add(assignedHistory);
+                    // notify user here
+                }
+                if (oldTicket.Description != ticket.Description)
+                {
+                    var descriptionHistory = new TicketHistory
+                    {
+                        TicketId = ticket.Id,
+                        UserId = User.Identity.GetUserId(),
+                        Property = "Description",
+                        oldValue = oldTicket.Description,
+                        newValue = ticket.Description,
+                        Changed = transactionUpdateTimeStamp
+                    };
+                    db.TicketHistorys.Add(descriptionHistory);
+                }
+                if (oldTicket.DueDate != ticket.DueDate)
+                {
+                    var duedateHistory = new TicketHistory
+                    {
+                        TicketId = ticket.Id,
+                        UserId = User.Identity.GetUserId(),
+                        Property = "DueDate",
+                        oldValue = oldTicket.DueDate.ToString(),
+                        newValue = ticket.DueDate.ToString(),
+                        Changed = transactionUpdateTimeStamp
+                    };
+                    db.TicketHistorys.Add(duedateHistory);
+                }
+                if (oldTicket.EstHours != ticket.EstHours)
+                {
+                    var esthoursHistory = new TicketHistory
+                    {
+                        TicketId = ticket.Id,
+                        UserId = User.Identity.GetUserId(),
+                        Property = "EstHours",
+                        oldValue = oldTicket.EstHours.ToString(),
+                        newValue = ticket.EstHours.ToString(),
+                        Changed = transactionUpdateTimeStamp
+                    };
+                    db.TicketHistorys.Add(esthoursHistory);
+                }
+
+                if (oldTicket.TicketPriorityId != ticket.TicketPriorityId)
+                {
+                    var priorityHistory = new TicketHistory
+                    {
+                        TicketId = ticket.Id,
+                        UserId = User.Identity.GetUserId(),
+                        Property = "TicketPriority",
+                        oldValue = oldTicket.TicketPriorityId.ToString(),
+                        newValue = ticket.TicketPriorityId.ToString(),
+                        Changed = transactionUpdateTimeStamp
+                    };
+                    db.TicketHistorys.Add(priorityHistory);
+                }
+
+                if (oldTicket.TicketStatusId != ticket.TicketStatusId)
+                {
+                    var statusHistory = new TicketHistory
+                    {
+                        TicketId = ticket.Id,
+                        UserId = User.Identity.GetUserId(),
+                        Property = "TicketStatus",
+                        oldValue = oldTicket.TicketStatusId.ToString(),
+                        newValue = ticket.TicketStatusId.ToString(),
+                        Changed = transactionUpdateTimeStamp
+                    };
+                    db.TicketHistorys.Add(statusHistory);
+                }
+
+                if (oldTicket.TicketTypeId != ticket.TicketTypeId)
+                {
+                    var typeHistory = new TicketHistory
+                    {
+                        TicketId = ticket.Id,
+                        UserId = User.Identity.GetUserId(),
+                        Property = "TicketType",
+                        oldValue = oldTicket.TicketTypeId.ToString(),
+                        newValue = ticket.TicketTypeId.ToString(),
+                        Changed = transactionUpdateTimeStamp
+                    };
+                    db.TicketHistorys.Add(typeHistory);
+                }
+
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -253,7 +356,7 @@ namespace BugSmear.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateComment([Bind(Include = "TicketId,AuthorId,Created,Comment")] TicketComment ticketcomment)
         {
-        
+
             if (ModelState.IsValid)
             {
                 if (String.IsNullOrWhiteSpace(ticketcomment.Comment))
@@ -269,14 +372,14 @@ namespace BugSmear.Controllers
 
                 db.TicketComments.Add(ticketcomment);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Details", new { id =  ticketcomment.TicketId });
+                return RedirectToAction("Details", new { id = ticketcomment.TicketId });
 
             }
             return RedirectToAction("Details", new { id = ticketcomment.TicketId });
         }
 
         // GET: Posts/DeleteComment
-        //[Authorize(Roles = "Administrator, Project Manager")]
+        //[Authorize(Roles = "Administrator", "Project Manager")]
         public async Task<ActionResult> DeleteComment(int? id)
         {
             if (id == null)
