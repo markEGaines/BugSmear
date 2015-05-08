@@ -1,0 +1,45 @@
+﻿@model IEnumerable<BugSmear.Models.TicketHistory>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.6/css/jquery.dataTables.css">
+@{
+    ViewBag.Title = "Tickets";
+}
+
+<h2>Ticket History</h2>
+
+<table id="historytable" class="display nowrap"  cellspacing="0" width="100">
+    <thead>
+        <tr>
+            <th>Changed By:</th>
+            <th>@Html.DisplayNameFor(model => model.Property)</th>
+            <th>From</th>
+            <th>To</th>
+            <th>When</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.User.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Property)</td>
+                <td>@Html.DisplayFor(modelItem => item.oldValue)</td>
+                <td>@Html.DisplayFor(modelItem => item.newValue)</td>
+                <td>
+                    @if (item.Changed != null)
+                    { @item.Changed.LocalDateTime}
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#historytable').DataTable({
+                "order": [[4, "asc"]]
+            });
+        });
+    </script>
+}

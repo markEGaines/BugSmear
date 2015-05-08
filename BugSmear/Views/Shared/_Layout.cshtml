@@ -33,50 +33,101 @@
             </div>
         </div>
     </div>
-    <div id="cl-wrapper" class="fixed-menu">
+
+    <div id="cl-wrapper" class="sb-collapsed">
         <div class="cl-sidebar">
-            <!-- Collapse Toggle -->
-            <div class="cl-toggle"><i class="fa fa-reorder"></i></div>
-            @if (this.User.Identity.IsAuthenticated)
-            {
-            <!-- Menu Items -->
-                <div class="cl-navblock">
-                    <ul class="cl-vnavigation">
-                        <li>
-                            <a href="/Home/Index"><i class="fa fa-home"></i><span>Home</span></a>
-                        </li>
-                        <li>
-                            <a href="/Tickets/Index"><i class="fa fa-ticket"></i>Tickets</a>
-                        </li>
-                        <li>
-                            <a href="/Projects/Index"><i class="fa fa-puzzle-piece"></i>Projects</a>
-                        </li>
-                        <li>
-                            <a href="/Admin/Users"><i class="fa fa-user"></i>Users</a>
-                            @*@Html.ActionLink("Users", "Users", "Admin")*@
-                        </li>
-                    </ul>
+            <div class="cl-toggle"><i class="fa fa-bars"></i></div>
+            <div class="cl-navblock">
+                <div class="menu-space">
+                    <div class="content">
+                        <ul class="cl-vnavigation">
+                            <li>
+                                <a href="/Home/Index"><i class="fa fa-home"></i><span>Home</span></a>
+                            </li>
+                            <li>
+                                <a href="/Tickets/Index"><i class="fa fa-ticket"></i>Tickets</a>
+                            </li>
+                            <li>
+                                <a href="/Projects/Index"><i class="fa fa-puzzle-piece"></i>Projects</a>
+                            </li>
+                            <li>
+                                <a href="/Admin/Users"><i class="fa fa-user"></i>Users</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            }
+                @*<div class="text-right collapse-button" style="padding:7px 9px;">
+                        <input type="text" class="form-control search" placeholder="Search..." />
+                        <button id="sidebar-collapse" class="btn btn-default" style=""><i style="color:#fff;" class="fa fa-angle-left"></i></button>
+                    </div>*@
+            </div>
         </div>
 
-
-        <div class="container-fluid">
+        <div class="container-fluid" id="pcont">
             <div class="cl-mcont">
-                <!-- Content goes here -->
                 @RenderBody()
             </div>
-            <hr />
-            <footer>
-                <p>&copy; @DateTime.Now.Year - BugSMEAR - a Simple Method Ensures Appropriate Resolutions</p>
-            </footer>
         </div>
+
     </div>
+
+
+
+
+
+    @*<div id="cl-wrapper" class="fixed-menu">
+            <div class="cl-sidebar">
+                <!-- Collapse Toggle -->
+                <div class="cl-toggle"><i class="fa fa-reorder"></i></div>
+                @if (this.User.Identity.IsAuthenticated)
+                {
+                <!-- Menu Items -->
+                    <div class="cl-navblock">
+                        <ul class="cl-vnavigation">
+                            <li>
+                                <a href="/Home/Index"><i class="fa fa-home"></i><span>Home</span></a>
+                            </li>
+                            <li>
+                                <a href="/Tickets/Index"><i class="fa fa-ticket"></i>Tickets</a>
+                            </li>
+                            <li>
+                                <a href="/Projects/Index"><i class="fa fa-puzzle-piece"></i>Projects</a>
+                            </li>
+                            <li>
+                                <a href="/Admin/Users"><i class="fa fa-user"></i>Users</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+
+
+            <div class="container-fluid">
+                <div class="cl-mcont">
+                    <!-- Content goes here -->
+                    @RenderBody()
+                </div>
+                <hr />
+                <footer>
+                    <row>
+                        <p>&copy; @DateTime.Now.Year - BugSMEAR - a Simple Method Ensures Appropriate Resolutions</p>
+                    </row>
+                </footer>
+            </div>
+        </div>*@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/cleanzone")
 
     @RenderSection("scripts", required: false)
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //initialize the javascript
+            App.init();
+        });
+    </script>
 </body>
 </html>

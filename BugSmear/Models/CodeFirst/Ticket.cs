@@ -31,6 +31,8 @@ namespace BugSmear.Models
         public string AssignedToUserId { get; set; }
 
         public float EstHours { get; set; }            // scope creep
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
+               ApplyFormatInEditMode = true)]
         public DateTimeOffset? DueDate { get; set; }   // scope creep
 
         public virtual TicketStatus TicketStatus { get; set; }

@@ -1,15 +1,19 @@
 ﻿@model BugSmear.Models.Ticket
-
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.6/css/jquery.dataTables.css">
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Ticket Details</h2>
+
 
 <div>
-    <h4>Ticket</h4>
+    <h4>@Html.DisplayFor(model => model.Title)</h4>
     <hr />
     <div class="row">
+        <div class="col-md-6">
+            <p>@Html.DisplayFor(model => model.Description)</p>
+        </div>
         <div class="col-md-6">
             <dl class="dl-horizontal">
                 <dt>@Html.DisplayNameFor(model => model.Project.ProjectName)</dt>
@@ -23,12 +27,6 @@
 
                 <dt>@Html.DisplayNameFor(model => model.TicketType.Type)</dt>
                 <dd>@Html.DisplayFor(model => model.TicketType.Type)</dd>
-
-                <dt>@Html.DisplayNameFor(model => model.Title)</dt>
-                <dd>@Html.DisplayFor(model => model.Title)</dd>
-
-                <dt>@Html.DisplayNameFor(model => model.Description)</dt>
-                <dd>@Html.DisplayFor(model => model.Description)</dd>
 
                 <dt>@Html.DisplayNameFor(model => model.Created)</dt>
                 <dd>
@@ -62,12 +60,7 @@
 
             </dl>
         </div>
-        <div class="col-md-6">
-            @foreach (var ta in Model.TicketAttachments)
-            {
-               <img class="img-responsive" src="@ta.FileUrl" />
-            }
-        </div>
+
     </div>
 </div>
 
@@ -76,51 +69,115 @@
     @Html.ActionLink("Back to List", "Index")
 </p>
 
-
-
-
-
-<div class="row">
-    <!-- New Comment Form -->
-    <form role="form" method="post" action="@Url.Action("CreateComment","Tickets")">
-        @Html.AntiForgeryToken()
-        <div class="col-lg-7">
-            <h4>Leave a Comment:</h4>
-            <div class="form-group">
-                <textarea name="Comment" class="form-control" rows="3"></textarea>
-                <input type="hidden" name="TicketId" id="TicketId" value="@Model.Id" />
+<div class="tab-container">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#comments" data-toggle="tab">Comments</a></li>
+        <li><a href="#attachments" data-toggle="tab">Attachments</a></li>
+        <li><a href="#history" data-toggle="tab">History</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="comments">
+            <div class="row">
+                <!-- New Comment Form -->
+                <form role="form" method="post" action="@Url.Action("CreateComment","Tickets")">
+                    @Html.AntiForgeryToken()
+                    <div class="col-lg-9">
+                        <h4>Leave a Comment:</h4>
+                        <div class="form-group">
+                            <textarea name="Comment" class="form-control" rows="3"></textarea>
+                            <input type="hidden" name="TicketId" id="TicketId" value="@Model.Id" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                    @if (this.User.IsInRole("Developer") || this.User.IsInRole("Project Manager"))
+                    {
+                        <div class="col-lg-3">
+                            <p>Actual Hours: <input name="Hours" id="Hours" /></p>
+                            <p>Estimated Percent Complete: <input name="PercentComplete" id="PercentComplete" /></p>
+                        </div>
+                    }
+                </form>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-        @if (this.User.IsInRole("Developer") || this.User.IsInRole("Project Manager"))
-        {
-            <div class="col-lg-3">
-                <p>Actual Hours: <input name="Hours" id="Hours" /></p>
-                <p>Estimated Percent Complete: <input name="PercentComplete" id="PercentComplete" /></p>
-            </div>
-        }
-    </form>
-</div>
-
-@foreach (var comment in Model.TicketComments)
-{
+            @foreach (var comment in Model.TicketComments)
+            {
             <!-- Comment Content -->
-    <hr>
-    <div class="row">
-        <div class="col-lg-7">
-            By: @Html.DisplayFor(model => comment.User.UserName) on @Html.DisplayFor(model => comment.Created)
-            <p>@Html.Raw(comment.Comment)</p>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-7">
+                        By: @Html.DisplayFor(model => comment.User.UserName) on @Html.DisplayFor(model => comment.Created)
+                        <p>@Html.Raw(comment.Comment)</p>
+                    </div>
+                    @if (this.User.IsInRole("Administrator") || this.User.IsInRole("Project Manager"))
+                    {
+                        <div class="col-lg-3">
+                            <p>Actual Hours: @Html.DisplayFor(model => comment.Hours)</p>
+                            <p>Est Pct Complete: @Html.DisplayFor(model => comment.PercentComplete)</p>
+                        </div>
+                        <div class="col-lg-2">
+                            <button>@Html.ActionLink("Edit", "EditComment", new { id = comment.Id }) </button>
+                            <button>@Html.ActionLink("Delete", "DeleteComment", new { id = comment.Id })</button>
+                        </div>
+                    }
+                </div>
+            }
         </div>
-        @if (this.User.IsInRole("Administrator") || this.User.IsInRole("Project Manager"))
-        {
-        <div class="col-lg-3">
-            <p>Actual Hours: @Html.DisplayFor(model => comment.Hours)</p>
-            <p>Est Pct Complete: @Html.DisplayFor(model => comment.PercentComplete)</p>
+        <div class="tab-pane" id="attachments">
+            <row>
+                <form role="form" method="post" action="@Url.Action("Details","Tickets")" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    @*@Html.LabelFor(model => model.TicketAttachments, "Add Attachment", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <input name="image" type="file" id="fileUpload" />
+                    <input type="submit" value="Upload" class="btn btn-primary" />
+                    <input type="hidden" name="TicketId" id="TicketId" value="@Model.Id" />
+                    <input type="hidden" name="Title" id="Title" value="@Model.Id" />
+                </form>
+            </row>
+            <row>
+                @foreach (var ta in Model.TicketAttachments)
+                {
+                    <img class="img-responsive" src="@ta.FileUrl" />
+                    <p> @ta.FileUrl </p>
+                    <hr />
+                }
+            </row>
         </div>
-        <div class="col-lg-2">
-            <button>@Html.ActionLink("Edit", "EditComment", new { id = comment.Id }) </button>
-            <button>@Html.ActionLink("Delete", "DeleteComment", new { id = comment.Id })</button>
+        <div class="tab-pane" id="history">
+            <table id="historytable" class="display nowrap" cellspacing="0" width="100">
+                <thead>
+                    <tr>
+                        <th>Changed By:</th>
+                        <th>Property</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>When</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TicketHistorys)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.User.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Property)</td>
+                            <td>@Html.DisplayFor(modelItem => item.oldValue)</td>
+                            <td>@Html.DisplayFor(modelItem => item.newValue)</td>
+                            <td>
+                                @if (item.Changed != null)
+                                { @item.Changed.LocalDateTime}
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-        }
     </div>
+</div>
+@section scripts {
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#historytable').DataTable({
+                "order": [[4, "asc"]]
+            });
+        });
+    </script>
 }

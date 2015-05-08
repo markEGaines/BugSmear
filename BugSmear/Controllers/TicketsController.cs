@@ -94,6 +94,39 @@ namespace BugSmear.Controllers
             return View(ticket);
         }
 
+        // POST: Tickets/Details/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Details([Bind(Include = "Id,Title")] Ticket ticket, HttpPostedFileBase image)
+        {
+            if (image != null && image.ContentLength > 0)
+            {
+                var ext = Path.GetExtension(image.FileName).ToLower();                    // check file type is image
+                if (ext != ".png" && ext != ".jpg" && ext != ".jpeg")
+                    ModelState.AddModelError("image", "Invalid format.");
+            }
+            if (ModelState.IsValid)
+            {
+                if (image != null && image.ContentLength > 0)
+                {
+                    TicketAttachment ta = new TicketAttachment();
+                    var filePath = "/Uploads/tickets/images/";
+                    var absPath = Server.MapPath("~" + filePath);
+                    ta.FileUrl = filePath + image.FileName;
+                    image.SaveAs(Path.Combine(absPath, image.FileName));
+                    ta.Created = System.DateTimeOffset.Now;
+                    ta.UserId = User.Identity.GetUserId();
+                    ta.TicketId = ticket.Id;
+                    db.TicketAttachments.Add(ta);
+                }
+                await db.SaveChangesAsync();
+                //return RedirectToAction("Index");
+            }
+            return RedirectToAction("Details", new { id = ticket.Id });
+        }
+
+
+
         // GET: Tickets/Create
         public ActionResult Create()
         {
@@ -204,6 +237,9 @@ namespace BugSmear.Controllers
                                  where t.Id == ticket.Id
                                  select t).FirstOrDefault();
 
+
+
+
                 if (oldTicket.AssignedToUserId != ticket.AssignedToUserId)
                 {
                     var assignedHistory = new TicketHistory
@@ -211,20 +247,35 @@ namespace BugSmear.Controllers
                         TicketId = ticket.Id,
                         UserId = User.Identity.GetUserId(),
                         Property = "AssignedUserId",
-                        oldValue = oldTicket.AssignedToUserId,
-                        newValue = ticket.AssignedToUserId,
+                        oldValue = (oldTicket.AssignedToUser != null ? oldTicket.AssignedToUser.Email : "un-assigned"),
+                        newValue = (from un in db.Users
+                                    where un.Id == ticket.AssignedToUserId
+                                    select un.Email).FirstOrDefault(),
                         Changed = transactionUpdateTimeStamp
                     };
+
                     db.TicketHistorys.Add(assignedHistory);
-                    // notify user here
-                    var user = db.Users.Find(User.Identity.GetUserId());
+                    // notify users here
+                    //                  var user = db.Users.Find(User.Identity.GetUserId());
+                    if (oldTicket.AssignedToUser != null)
+                    {
+                        await new EmailService().SendAsync(new IdentityMessage
+                        {
+                            Subject = "You have been removed from a ticket",
+                            Destination = oldTicket.AssignedToUser.Email,
+                            Body = "You have been removed from a ticket... you can come back",
+                        });
+                    }
                     await new EmailService().SendAsync(new IdentityMessage
                     {
-                        Subject = "You have been assigned a new ticket",
-                        Destination = user.Email,
-                        Body = "You have been assigned a new ticket... you should run",
+                        Subject = "You have been assigned to a ticket",
+                        Destination = (from un in db.Users
+                                       where un.Id == ticket.AssignedToUserId
+                                       select un.Email).FirstOrDefault(),
+                        Body = "You have been assigned to a ticket... you should run away",
                     });
                 }
+
                 if (oldTicket.Description != ticket.Description)
                 {
                     var descriptionHistory = new TicketHistory
@@ -251,6 +302,19 @@ namespace BugSmear.Controllers
                     };
                     db.TicketHistorys.Add(duedateHistory);
                 }
+
+                // notify user here
+
+                if (oldTicket.AssignedToUser != null)
+                {
+                    await new EmailService().SendAsync(new IdentityMessage
+                    {
+                        Subject = "Be advised!  The Due Date has changed!",
+                        Destination = db.Users.Find(ticket.AssignedToUserId).Email,
+                        Body = "The due date on your ticket has changed",
+                    });
+                }
+
                 if (oldTicket.EstHours != ticket.EstHours)
                 {
                     var esthoursHistory = new TicketHistory
@@ -272,8 +336,8 @@ namespace BugSmear.Controllers
                         TicketId = ticket.Id,
                         UserId = User.Identity.GetUserId(),
                         Property = "TicketPriority",
-                        oldValue = oldTicket.TicketPriorityId.ToString(),
-                        newValue = ticket.TicketPriorityId.ToString(),
+                        oldValue = oldTicket.TicketPriority.Priority,
+                        newValue = db.TicketPriorities.Find(ticket.TicketPriorityId).Priority,
                         Changed = transactionUpdateTimeStamp
                     };
                     db.TicketHistorys.Add(priorityHistory);
@@ -286,8 +350,8 @@ namespace BugSmear.Controllers
                         TicketId = ticket.Id,
                         UserId = User.Identity.GetUserId(),
                         Property = "TicketStatus",
-                        oldValue = oldTicket.TicketStatusId.ToString(),
-                        newValue = ticket.TicketStatusId.ToString(),
+                        oldValue = oldTicket.TicketStatus.Status,
+                        newValue = db.TicketStatus.Find(ticket.TicketStatusId).Status,
                         Changed = transactionUpdateTimeStamp
                     };
                     db.TicketHistorys.Add(statusHistory);
@@ -300,8 +364,8 @@ namespace BugSmear.Controllers
                         TicketId = ticket.Id,
                         UserId = User.Identity.GetUserId(),
                         Property = "TicketType",
-                        oldValue = oldTicket.TicketTypeId.ToString(),
-                        newValue = ticket.TicketTypeId.ToString(),
+                        oldValue = oldTicket.TicketType.Type,
+                        newValue = db.TicketTypes.Find(ticket.TicketTypeId).Type,
                         Changed = transactionUpdateTimeStamp
                     };
                     db.TicketHistorys.Add(typeHistory);

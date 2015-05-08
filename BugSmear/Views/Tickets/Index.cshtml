@@ -26,13 +26,13 @@
             <th>@Html.DisplayNameFor(model => model.AssignedToUser)</th>
             <th>@Html.DisplayNameFor(model => model.EstHours)</th>
             <th>@Html.DisplayNameFor(model => model.DueDate)</th>
-            <th></th>
+            
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr id="@item.Id">
                 <td>@Html.DisplayFor(modelItem => item.Project.ProjectName)</td>
                 <td>@Html.DisplayFor(modelItem => item.TicketPriority.Priority)</td>
                 <td>@Html.DisplayFor(modelItem => item.TicketStatus.Status)</td>
@@ -54,17 +54,17 @@
                     @if (item.DueDate != null)
                     { @item.DueDate.Value.Date.ToShortDateString()}
                 </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id })
-                </td>
+                @*<td>*@
+                    @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |*@
+                    @*@Html.ActionLink("Details", "Details", new { id = item.Id })*@
+                @*</td>*@
             </tr>
         }
     </tbody>
 </table>
 
 
-
+<a id="linkbox"></a>
 
 
 @section scripts {
@@ -73,6 +73,13 @@
         $(document).ready(function () {
             $('#tickettable').DataTable({
                 "order": [[2, "asc"], [1, "asc"]]
+            });
+
+            $('#tickettable').on('click', 'tbody tr', function () {
+                var base = "@Url.Action("Details", "Tickets")"
+                var url = base + "/" + this.id
+                $('#linkbox').attr("href", url)
+                $('#linkbox')[0].click()
             });
         });
     </script>

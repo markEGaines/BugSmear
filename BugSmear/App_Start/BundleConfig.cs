@@ -33,7 +33,7 @@ namespace BugSmear
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
 	               "~/js/bootstrap.switch/bootstrap-switch.min.js",
-                   "~/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js",
+                   "~/js/bootstrap.datepicker/js/bootstrap-datepicker.min.js",
                    "~/js/bootstrap.slider/js/bootstrap-slider.js",
                    "~/js/bootstrap.multiselect/js/bootstrap-multiselect.js"));
 
@@ -53,10 +53,11 @@ namespace BugSmear
                       "~/js/jquery.multiselect/css/multi-select.css",
                       "~/js/bootstrap/dist/css/bootstrap.css",
                       "~/js/bootstrap.switch/bootstrap-switch.css",
-                      "~/js/bootstrap.datetimepicker/css/bootstrap-datetimepicker.min.css",
+                      "~/js/bootstrap.datepicker/css/bootstrap-datepicker.min.css",
                       "~/js/bootstrap.slider/css/slider.css",
                       "~/js/bootstrap.multiselect/css/bootstrap-multiselect.css",
                       "~/Content/site.css",
+                      "~/Content/jquery-ui.min.css",
                       "~/css/style.css"));
 
         }

@@ -16,7 +16,7 @@
     @foreach (var u in Model) {
         <tr>
             <td>@Html.DisplayFor(modelItem => u.Email)        </td>
-            <td>@Html.DisplayFor(modelItem => u.UserName)     </td>
+           @* <td>@Html.DisplayFor(modelItem => u.UserName)     </td>*@
             <td>
                 @if (this.User.IsInRole("Administrator"))
                 {
