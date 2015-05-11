@@ -9,17 +9,19 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace BugSmear.Controllers
 {
+   
     public class AdminController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Admin
+         [Authorize]
         [HttpGet]
         public ActionResult Users()
         {
             return View(db.Users.ToList());
         }
-
+         [Authorize]
         [HttpGet]
         public ActionResult EditUser(string Id)
         {

@@ -16,6 +16,7 @@ namespace BugSmear.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TicketHistories
+        [Authorize]
         public async Task<ActionResult> Index()
         {
             var ticketHistorys = db.TicketHistorys.Include(t => t.Ticket).Include(t => t.User);
@@ -23,6 +24,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: TicketHistories/Details/5
+        [Authorize]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)

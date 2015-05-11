@@ -130,6 +130,19 @@ namespace BugSmear.Helpers
         //    return resultList;
         //}
 
+        public IList<ApplicationUser> UsersInRole(string roleName)
+        {
+            var db = new ApplicationDbContext();
+            var resultList = new List<ApplicationUser>();
 
+            foreach (var user in db.Users)
+            {
+                if (IsUserInRole(user.Id, roleName))
+                {
+                    resultList.Add(user);
+                }
+            }
+            return resultList;
+        }
     }
 }

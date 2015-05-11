@@ -8,23 +8,25 @@ using BugSmear.Helpers;
 
 namespace BugSmear.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class ProjectUsersController : Controller
     {
         private UserProjectsHelper helper = new UserProjectsHelper();
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public ActionResult AssignRemoveUsersTEST()
+        public ActionResult AssignRemoveUsers(int Id)
         {
 
             var model = new ProjectUsersViewModel();
-            var project = db.Projects.Find(1);
+            var project = db.Projects.Find(Id);
             model.projectId = project.Id;
             model.projectName = project.ProjectName;
-            model.Users = new MultiSelectList(helper.ListUsersNotOnProject(1).OrderBy(u => u.UserName), "Id", "UserName");
+            var selUsers = helper.ListUsersOnProject(Id).OrderBy(u => u.UserName);
+            model.Users = new MultiSelectList(db.Users.OrderBy(u => u.UserName), "Id", "UserName", selUsers);
             return View(model);
         }
 
-        public ActionResult AssignRemoveUsers()
+        public ActionResult AssignRemoveUsersTEST()
         {
 
             var model = new ProjectUsersViewModel();
@@ -71,6 +73,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: RemoveUsers
+                [Authorize(Roles = "Administrator")]
         public ActionResult RemoveUsers(int Id)
         {
             var model = new ProjectUsersViewModel();

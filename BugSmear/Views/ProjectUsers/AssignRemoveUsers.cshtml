@@ -36,35 +36,9 @@
             </div>
             <div class="content">
                 <table class="dashed">
-
-                    <tr>
-                        <td>
-                            <select id='optgroup1' multiple='multiple'>
-                                <optgroup label='PM'>
-                                    <option value='1'>Yoda</option>
-                                    <option value='2' selected>Obiwan</option>
-                                </optgroup>
-                                <optgroup label='Dev'>
-                                    <option value='3'>Palpatine</option>
-                                    <option value='4' disabled>Darth Vader</option>
-                                </optgroup>
-                            </select>
-                        </td>
-                        <td>Option groups are detected automatically and for each option group an header element is added</td>
-                    </tr>
                     <tr>
                         <td>
                             @Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { @id="optgroup2", multiple="multiple"})
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.ListBoxFor(m => m.Users, new MultiSelectList(Model.Users, Model.SelectedUsers), htmlAttributes: new { @id = "optgroup3", multiple = "multiple" })
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { @class = "selectpicker" })
                         </td>
                     </tr>
                 </table>

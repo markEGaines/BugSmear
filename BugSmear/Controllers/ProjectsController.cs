@@ -16,12 +16,14 @@ namespace BugSmear.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Projects
+        [Authorize]
         public async Task<ActionResult> Index()
         {
             return View(await db.Projects.ToListAsync());
         }
 
         // GET: Projects/Details/5
+        [Authorize]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,6 +39,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: Projects/Create
+                [Authorize(Roles = "Administrator")]
         public ActionResult Create()
         {
             return View();
@@ -60,6 +63,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,6 +95,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: Projects/Delete/5
+                [Authorize(Roles = "Administrator")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)

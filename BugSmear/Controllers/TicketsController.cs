@@ -18,6 +18,7 @@ namespace BugSmear.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Tickets
+        [Authorize]
         public async Task<ActionResult> Index()
         {
 
@@ -76,6 +77,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: Tickets/Details/5
+        [Authorize]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -128,6 +130,7 @@ namespace BugSmear.Controllers
 
 
         // GET: Tickets/Create
+        [Authorize]
         public ActionResult Create()
         {
             ViewBag.ProjectId = new SelectList(db.Projects, "Id", "ProjectName");
@@ -180,6 +183,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: Tickets/Edit/5
+        [Authorize]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -447,7 +451,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: Posts/DeleteComment
-        //[Authorize(Roles = "Administrator", "Project Manager")]
+        [Authorize(Roles = "Administrator, 'Project Manager'")]
         public async Task<ActionResult> DeleteComment(int? id)
         {
             if (id == null)
@@ -465,7 +469,7 @@ namespace BugSmear.Controllers
         // POST: Posts/DeleteComment
         [HttpPost, ActionName("DeleteComment")]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin, Moderator")]
+        [Authorize(Roles = "Administrator, 'Project Manager'")]
         public async Task<ActionResult> DeleteCommentConfirmed(int id)
         {
             TicketComment ticketcomment = await db.TicketComments.FindAsync(id);
@@ -476,7 +480,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: Posts/EditComment
-        //[Authorize(Roles = "Admin, Moderator")]
+        [Authorize(Roles = "Administrator, 'Project Manager'")]
         public async Task<ActionResult> EditComment(int? id)
         {
             if (id == null)
@@ -497,7 +501,7 @@ namespace BugSmear.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin, Moderator")]
+        [Authorize(Roles = "Administrator, 'Project Manager'")]
         //public async Task<ActionResult> Edit([Bind(Include = "Id,Created,Updated,Title,Body,MediaUrl,Slug")] Post post)
         public async Task<ActionResult> EditComment([Bind(Include = "Created,Id,UserId,Comment,TicketId,Hours,PercentComplete")] TicketComment ticketcomment)
         {

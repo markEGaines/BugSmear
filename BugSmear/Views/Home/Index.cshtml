@@ -1,4 +1,5 @@
-﻿@using BugSmear.Models
+﻿@model BugSmear.Models.DashboardViewModel
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.6/css/jquery.dataTables.css">
 @{
     ViewBag.Title = "Home Page";
 }
@@ -17,6 +18,118 @@
 
 }
 
-    @*<div>
-            <h2>DASHBOARD GOES HERE</h2>
-        </div>*@
+<div>
+    <h2>DASHBOARD</h2>
+    <div>
+        @*<p>Tickets Not Assigned: @Model.TicketsNotAssigned</p>
+        <p>Tickets Assigned: @Model.TicketsAssigned</p>
+        <p>Tickets Resolved: @Model.TicketsResolved</p>
+        <p>Tickets Open: @Model.TicketsOpen</p>
+        <p>Tickets Due: @Model.TicketsDue3</p>
+        <p>Tickets OverDue: @Model.TicketsOverDue</p>*@
+
+        <div class="row dash-cols">
+            <div class="col-sm-9 col-md-9 col-lg-4">
+                <div class="block">
+                    <div class="header">
+                        <h2><i class="fa fa-comment"></i>Open Tickets</h2>
+                    </div>
+                    <div class="content no-padding">
+                        <div class="fact-data text-center">
+                            <h3>Un-Assigned</h3>
+                            <h2>@Model.TicketsNotAssigned</h2>
+                        </div>
+                        <div class="fact-data text-center">
+                            <h3>Assigned</h3>
+                            <h2>@Model.TicketsOpen</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3 col-md-3 col-lg-4">
+                <div class="block">
+                    <div class="header">
+                        <h2><i class="fa fa-comment"></i>Tickets  Due</h2>
+                    </div>
+                    <div class="content no-padding">
+                        <div class="fact-data text-center">
+                            <h3>OverDue</h3>
+                            <h2>@Model.TicketsOverDue</h2>
+                        </div>
+                        <div class="fact-data text-center">
+                            <h3>Due within 3 days</h3>
+                            <h2>@Model.TicketsDue3</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <table class="dataTable" id="devtable">
+            <thead>
+                <tr>
+                    <td><strong>Developers (top 3)</strong></td>
+                    <td><strong>Count</strong></td>
+                </tr>
+            </thead>
+            @foreach (var item in Model.devInfo)
+            {
+                <tr>
+                    <td>  @item.DevName</td>
+                    <td>  tickets: @item.NumTickets.ToString()</td>
+                </tr>
+            }
+        </table>
+
+    </div>
+
+    <div>
+        <table class ="dataTable" id="projtable">
+            <thead>
+                <tr>
+                    <td><strong>Projects (top 5)</strong></td>
+                    <td><strong>Count</strong></td>
+                </tr>
+            </thead>
+            @foreach (var item in Model.projInfo)
+            {
+
+                <tr>
+                    <td>  @item.ProjectName</td>
+                    <td>  tickets: @item.NumTickets.ToString()</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+</div>
+
+@section scripts {
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.6/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#devtable').DataTable({
+                "order": [[1, "desc"]],
+                "paging": false,
+                "info": false,
+                "filter": false
+            });
+
+            $('#projtable').DataTable({
+                "order": [[1, "desc"]],
+                "paging": false,
+                "info": false,
+                "filter": false
+            });
+
+            @*$('#tickettable').on('click', 'tbody tr', function () {
+                var base = "@Url.Action("Details", "Tickets")"
+                var url = base + "/" + this.id
+                $('#linkbox').attr("href", url)
+                $('#linkbox')[0].click()
+            });*@
+        });
+    </script>
+}
