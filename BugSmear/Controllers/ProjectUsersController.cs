@@ -21,20 +21,36 @@ namespace BugSmear.Controllers
             var project = db.Projects.Find(Id);
             model.projectId = project.Id;
             model.projectName = project.ProjectName;
-            var selUsers = helper.ListUsersOnProject(Id).OrderBy(u => u.UserName);
+            var selUsers = helper.ListUsersOnProject(Id).OrderBy(u => u.UserName).Select(n => n.Id);
             model.Users = new MultiSelectList(db.Users.OrderBy(u => u.UserName), "Id", "UserName", selUsers);
+
             return View(model);
         }
 
-        public ActionResult AssignRemoveUsersTEST()
+        // POST: AssignRemoveUsers
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
+        public ActionResult AssignRemoveUsers(ProjectUsersViewModel model)
         {
-
-            var model = new ProjectUsersViewModel();
-            var project = db.Projects.Find(1);
-            model.projectId = project.Id;
-            model.projectName = project.ProjectName;
-            model.Users = new MultiSelectList(helper.ListUsersNotOnProject(1).OrderBy(u => u.UserName), "Id", "UserName");
-            return View(model);
+            if (ModelState.IsValid)
+            {
+                var userlist = db.Users;
+                foreach (var usr in userlist)
+                {
+                    if (model.SelectedUsers != null && model.SelectedUsers.Contains(usr.Id))
+                    {
+                        helper.AddUserToProject(usr.Id, model.projectId);
+                    }
+                    else
+                    {
+                        helper.RemoveUserFromProject(usr.Id, model.projectId);
+                    }
+                }
+                return RedirectToAction("Index", "Projects", new { id = model.projectId });
+                //return View(model);
+            }
+            return View("Error");
         }
 
         // GET: AssignUsers
@@ -73,7 +89,7 @@ namespace BugSmear.Controllers
         }
 
         // GET: RemoveUsers
-                [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult RemoveUsers(int Id)
         {
             var model = new ProjectUsersViewModel();

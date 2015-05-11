@@ -22,3 +22,6 @@ select,
 textarea {
     max-width: 580px;
 }
+.ms-container {
+  width: 80%;
+}

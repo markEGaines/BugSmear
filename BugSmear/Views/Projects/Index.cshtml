@@ -20,8 +20,9 @@
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
-                <a href="/ProjectUsers/AssignUsers/@item.Id">Assign Users</a> |
-                <a href="/ProjectUsers/RemoveUsers/@item.Id">Remove Users</a>
+                @*<a href="/ProjectUsers/AssignUsers/@item.Id">Assign Users</a> |*@
+                @*<a href="/ProjectUsers/RemoveUsers/@item.Id">Remove Users</a> |*@
+                <a href="/ProjectUsers/AssignRemoveUsers/@item.Id">AssignRemove Users</a>
             </td>
         </tr>
     }

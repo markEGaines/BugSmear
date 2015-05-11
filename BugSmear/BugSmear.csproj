@@ -3358,7 +3358,6 @@
     <Content Include="Views\Tickets\DeleteComment.cshtml" />
     <Content Include="Views\Tickets\EditComment.cshtml" />
     <Content Include="Views\ProjectUsers\AssignRemoveUsers.cshtml" />
-    <Content Include="Views\ProjectUsers\AssignRemoveUsersTEST.cshtml" />
     <Content Include="Views\TicketHistories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
