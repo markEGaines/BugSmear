@@ -22,8 +22,9 @@ namespace BugSmear.Controllers
             {
                 // return (RedirectToAction("Index", "Tickets"));
 
+                // build DASHBOARD
+
                 var model = new DashboardViewModel();
-         //       var projects = db.Projects.Include("Tickets").OrderByDescending(p => p.Tickets.Count).Take(5);
                 var projects = db.Projects.Include("Tickets").OrderByDescending(p => p.Tickets.Count).Take(5);
                 foreach (var p in projects)
                 {

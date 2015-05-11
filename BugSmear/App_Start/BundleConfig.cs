@@ -43,22 +43,22 @@ namespace BugSmear
                    "~/js/intro.js/intro.js",
                    "~/js/behaviour/general.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/fonts/font-awesome-4/css/font-awesome.min.css",
-                      "~/js/jquery.gritter/css/jquery.gritter.css",
-                      "~/js/jquery.nanoscroller/nanoscroller.css",
-                      "~/js/jquery.easypiechart/jquery.easy-pie-chart.css",
-                      "~/js/jquery.select2/select2.css",
-                      "~/js/jquery.multiselect/css/multi-select.css",
-                      "~/js/bootstrap/dist/css/bootstrap.css",
-                      "~/js/bootstrap.switch/bootstrap-switch.css",
-                      "~/js/bootstrap.datepicker/css/bootstrap-datepicker.min.css",
-                      "~/js/bootstrap.slider/css/slider.css",
-                      "~/js/bootstrap.multiselect/css/bootstrap-multiselect.css",
-                      "~/Content/site.css",
-                      "~/Content/jquery-ui.min.css",
-                      "~/css/style.css"));
+            bundles.Add(new StyleBundle("~/Content/css")
+                    .Include("~/Content/bootstrap.css")
+                    .Include( "~/fonts/font-awesome-4/css/font-awesome.min.css", new CssRewriteUrlTransform())
+                      .Include("~/js/jquery.gritter/css/jquery.gritter.css")
+                      .Include("~/js/jquery.nanoscroller/nanoscroller.css")
+                      .Include("~/js/jquery.easypiechart/jquery.easy-pie-chart.css")
+                      .Include("~/js/jquery.select2/select2.css")
+                      .Include("~/js/jquery.multiselect/css/multi-select.css")
+                      .Include("~/js/bootstrap/dist/css/bootstrap.css")
+                      .Include("~/js/bootstrap.switch/bootstrap-switch.css")
+                      .Include("~/js/bootstrap.datepicker/css/bootstrap-datepicker.min.css")
+                      .Include("~/js/bootstrap.slider/css/slider.css")
+                      .Include("~/js/bootstrap.multiselect/css/bootstrap-multiselect.css")
+                      .Include("~/Content/site.css")
+                      .Include("~/Content/jquery-ui.min.css")
+                      .Include("~/css/style.css"));
 
         }
     }
